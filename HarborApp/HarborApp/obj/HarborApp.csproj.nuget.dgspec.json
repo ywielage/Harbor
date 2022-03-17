@@ -1,36 +1,38 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Github Projects\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj": {}
+    "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj": {}
   },
   "projects": {
-    "D:\\Github Projects\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj": {
+    "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Github Projects\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj",
+        "projectUniqueName": "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj",
         "projectName": "HarborApp",
-        "projectPath": "D:\\Github Projects\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj",
-        "packagesPath": "C:\\Users\\Yanniek\\.nuget\\packages\\",
-        "outputPath": "D:\\Github Projects\\Harbor\\HarborApp\\HarborApp\\obj\\",
+        "projectPath": "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborApp\\HarborApp\\HarborApp.csproj",
+        "packagesPath": "C:\\Users\\larsk\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborApp\\HarborApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\Yanniek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\larsk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net6.0-windows7.0"
+          "net5.0-windows7.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net6.0-windows7.0": {
-            "targetAlias": "net6.0-windows",
+          "net5.0-windows7.0": {
+            "targetAlias": "net5.0-windows",
             "projectReferences": {}
           }
         },
@@ -41,8 +43,8 @@
         }
       },
       "frameworks": {
-        "net6.0-windows7.0": {
-          "targetAlias": "net6.0-windows",
+        "net5.0-windows7.0": {
+          "targetAlias": "net5.0-windows",
           "imports": [
             "net461",
             "net462",
