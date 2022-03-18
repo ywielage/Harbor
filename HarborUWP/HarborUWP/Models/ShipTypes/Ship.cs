@@ -12,7 +12,7 @@ namespace HarborApp.Models.ShipTypes
         public int Id { get; set; }
         public State State { get; set; }
         public TimeUntilDone TimeUntilDone { get; set; }
-        protected int minPercantageCapacity;
+        protected int minPercantageCapacity = 80;
         protected int maxCapacity;
 
         protected Ship(int id, State state, int minPercantageCapacity, int maxCapacity)
