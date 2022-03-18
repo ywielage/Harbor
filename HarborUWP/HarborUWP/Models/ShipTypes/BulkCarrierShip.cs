@@ -12,7 +12,7 @@ namespace HarborApp.Models.ShipTypes
         public int Inventory { get; set; }
         public BulkItemType BulkItemType { get; set; }
 
-        public BulkCarrierShip(int id, State state, int maxPercantageCapacity, int maxCapacity, int inventory, BulkItemType bulkItemType) : base(id, state, maxPercantageCapacity, maxCapacity)
+        public BulkCarrierShip(int id, State state, int minPercantageCapacity, int maxCapacity, int inventory, BulkItemType bulkItemType) : base(id, state, minPercantageCapacity, maxCapacity)
         {
             Inventory = inventory;
             BulkItemType = bulkItemType;

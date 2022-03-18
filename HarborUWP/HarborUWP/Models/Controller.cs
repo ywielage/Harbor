@@ -57,7 +57,6 @@ namespace HarborApp.Models
             }
         }
         //update ship constructor met de automatische 80% voor maxPercentageCapacity
-        //maxPercentageCapacity moet min zijn
         private Ship createRandomShip(int id)
         {
             Random random = new Random();
