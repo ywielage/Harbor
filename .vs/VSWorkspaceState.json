@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\HarborApp",
-    "\\HarborApp\\HarborApp"
+    "\\HarborApp\\HarborApp",
+    "\\HarborUWP"
   ],
-  "SelectedNode": "\\HarborApp\\HarborApp\\MainWindow.xaml.cs",
+  "SelectedNode": "\\HarborUWP\\HarborUWP.sln",
   "PreviewInSolutionExplorer": false
 }

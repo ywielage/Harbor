@@ -13,7 +13,7 @@ namespace HarborApp.Models.ShipTypes
 
         public ContainerShip(int id, State state, int minPercantageCapacity, int maxCapacity) : base(id, state, minPercantageCapacity, maxCapacity)
         {
-            containers = new();
+            containers = new List<Container>();
         }
     }
 }

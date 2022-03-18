@@ -20,7 +20,7 @@ namespace HarborApp.Models
             TonsOfSand = 0;
             TonsOfCoal = 0;
             TonsOfWheat = 0;
-            containers = new();
+            containers = new List<Container>();
         }
     }
 }

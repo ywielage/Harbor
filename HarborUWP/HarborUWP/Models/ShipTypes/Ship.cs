@@ -11,7 +11,7 @@ namespace HarborApp.Models.ShipTypes
     {
         public int Id { get; set; }
         public State State { get; set; }
-        public TimeUntilDone? TimeUntilDone { get; set; }
+        public TimeUntilDone TimeUntilDone { get; set; }
         protected int minPercantageCapacity;
         protected int maxCapacity;
 

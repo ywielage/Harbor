@@ -11,9 +11,9 @@ namespace HarborApp.Models
         public List<DockingStation> DockingStations { get; set; }
         public Warehouse Warehouse { get; set; }
 
-        public Harbor(Warehouse warehouse)
+        public Harbor(Warehouse warehouse, List<DockingStation> dockingStation)
         {
-            DockingStations = new();
+            DockingStations = dockingStation;
             Warehouse = warehouse;
         }
     }

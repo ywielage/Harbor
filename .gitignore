@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs
+/HarborUWP/HarborUWP/bin/x86/Debug
+/HarborUWP/HarborUWP/obj/ARM
+/HarborUWP/HarborUWP/obj/ARM64
+/HarborApp/HarborApp

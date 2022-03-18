@@ -15,7 +15,7 @@ namespace HarborApp.Models
         public Controller(Harbor harbor)
         {
             Harbor = harbor;
-            Ships = new();
+            Ships = new List<Ship>();
         }
 
         public void UpdateShips()

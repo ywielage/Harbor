@@ -10,7 +10,7 @@ namespace HarborApp.Models
     internal class DockingStation
     {
         public int Number { get; set; }
-        public Ship? Ship { get; set; }
+        public Ship Ship { get; set; }
 
         public DockingStation(int number)
         {

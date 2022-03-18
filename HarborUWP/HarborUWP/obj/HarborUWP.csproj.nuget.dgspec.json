@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Github Projects\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj": {}
+    "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj": {}
   },
   "projects": {
-    "D:\\Github Projects\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj": {
+    "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Github Projects\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj",
+        "projectUniqueName": "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj",
         "projectName": "HarborUWP",
-        "projectPath": "D:\\Github Projects\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj",
-        "packagesPath": "C:\\Users\\Yanniek\\.nuget\\packages\\",
-        "outputPath": "D:\\Github Projects\\Harbor\\HarborUWP\\HarborUWP\\obj\\",
+        "projectPath": "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborUWP\\HarborUWP\\HarborUWP.csproj",
+        "packagesPath": "C:\\Users\\larsk\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\larsk\\source\\repos\\ywielage\\Harbor\\HarborUWP\\HarborUWP\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "fallbackFolders": [
@@ -19,7 +19,7 @@
           "C:\\Program Files (x86)\\Microsoft SDKs\\UWPNuGetPackages\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\Yanniek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\larsk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
