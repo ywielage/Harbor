@@ -11,5 +11,11 @@ namespace HarborApp.Models
     {
         public int Id { get; set; }
         public ContainerItemType ContainerItemType { get; set; }
+
+        public Container(int id, ContainerItemType containerItemType)
+        {
+            Id = id;
+            ContainerItemType = containerItemType;
+        }
     }
 }

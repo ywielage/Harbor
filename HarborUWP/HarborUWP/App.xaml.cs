@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarborApp.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,8 +30,8 @@ namespace HarborUWP
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += OnSuspending;
-        }
+            Controller controller = new Controller();
+            this.Suspending += OnSuspending;        }
 
         /// <summary>
         /// Invoked when the application is launched normally by the end user.  Other entry points
