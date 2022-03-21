@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarborUWP.Models.ShipTypes
+namespace HarborUWP.Models.Ships
 {
     internal abstract class Ship
     {
@@ -57,6 +57,22 @@ namespace HarborUWP.Models.ShipTypes
         public void Leave()
         {
             throw new NotImplementedException();
+        }
+        public static ShipTypes GenerateRandomShipType()
+        {
+            Random random = new Random();
+            int shipTypeNumber = random.Next(Enum.GetNames(typeof(ShipTypes)).Length);
+
+            switch (shipTypeNumber)
+            {
+                case 0:
+                default:
+                    return ShipTypes.OilTanker;
+                case 1:
+                    return ShipTypes.Container;
+                case 2:
+                    return ShipTypes.BulkCarrier;
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using HarborUWP.Models.ShipTypes;
+﻿using HarborUWP.Models.Ships;
 using System;
 using System.Collections.Generic;
 using System.Linq;

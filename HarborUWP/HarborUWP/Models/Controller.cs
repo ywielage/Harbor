@@ -1,4 +1,6 @@
-﻿using HarborUWP.Models.ShipTypes;
+﻿using HarborUWP.Models.Enums;
+using HarborUWP.Models.Ships;
+using HarborUWP.Models.Ships.ShipFactory;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,23 +22,24 @@ namespace HarborUWP.Models
 
         public Controller()
         {
-            Debug.WriteLine("started Controller");
-            initialize();
             runThreaded = false;
         }
 
-        private void initialize()
+        #region Initialization
+        public void Initialize()
         {
-            initializeHarbor();
-            initializeShips();
-            startSimulation();
+            InitializeHarbor();
+            InitializeShips();
+            StartSimulation();
         }
-        private void initializeHarbor()
+
+        private void InitializeHarbor()
         {
             Warehouse warehouse = new Warehouse();
-            Harbor = new Harbor(warehouse, initializeDockingStation());
+            Harbor = new Harbor(warehouse, InitializeDockingStation());
         }
-        private List<DockingStation> initializeDockingStation()
+
+        private List<DockingStation> InitializeDockingStation()
         {
             List<DockingStation> dockingStations = new List<DockingStation>();
             // 1/10 ratio voor DockingStation/Ship behouden
@@ -47,118 +50,22 @@ namespace HarborUWP.Models
             }
             return dockingStations;
         }
-        private void initializeShips()
+
+        private void InitializeShips()
         {
             this.Ships = new List<Ship>();
+            Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             for (int i = 0; i < 100; i++)
             {
-                this.Ships.Add(createRandomShip(i));
+                int value = random.Next(3);
+                this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
             }
         }
-        private Ship createRandomShip(int id)
-        {
-            Random random = new Random();
-            int value = random.Next(3);
-            Ship ship;
-            switch (value)
-            {
-                case 0:
-                    ship = createBulkCarrierShip(id);
-                    break;
-                case 1:
-                    ship = createOilTankerShip(id);
-                    break;
-                case 2:
-                    ship = createContainerShip(id);
-                    break;
-                default:
-                    ship = createBulkCarrierShip(id);
-                    break;
-            }
-            return ship;
-        }
+        #endregion
 
-        private Ship createBulkCarrierShip(int id)
-        {
-            Ship ship;
-            Random random = new Random();
-
-            //random type selecteren
-            Enums.BulkItemType type;
-            switch (random.Next(4))
-            {
-                case 0:
-                    type = Enums.BulkItemType.Coal;
-                    break;
-                case 1:
-                    type = Enums.BulkItemType.Salt;
-                    break;
-                case 2:
-                    type = Enums.BulkItemType.Sand;
-                    break;
-                case 3:
-                    type = Enums.BulkItemType.Wheat;
-                    break;
-                default:
-                    type = Enums.BulkItemType.Coal;
-                    break;
-            }
-            
-            ship = new BulkCarrierShip(id, Enums.State.InOpenWaters, 80, random.Next(18000, 20000), 0, type);
-            return ship;
-        }
-
-        private Ship createOilTankerShip(int id)
-        {
-            Random random = new Random();
-            return new OilTankerShip(id, Enums.State.InOpenWaters, 80, random.Next(70000, 190000));
-        }
-
-        private Ship createContainerShip(int id)
-        {
-            Random random = new Random();
-            int size = random.Next(17000, 20000);
-            //add createContatainerShip()
-            return new ContainerShip(id, Enums.State.InOpenWaters, 80, size);
-        }
-
-        private List<Container> createContainers(int size, int ShipId)
-        {
-            List<Container> containers = new List<Container>();
-            Random random = new Random();   
-            for (int i = 0; i < size; i++)
-            {
-                //aan de hand van het ship ID en de loop waarde zij er altijd uniek ID's
-                int id = Convert.ToInt32("" + ShipId + i);
-
-                //random item type
-                Enums.ContainerItemType type;
-                switch (random.Next(4))
-                {
-                    case 0:
-                        type = Enums.ContainerItemType.Equipment;
-                        break;
-                    case 1:
-                        type = Enums.ContainerItemType.Furniture;
-                        break;
-                    case 2:
-                        type = Enums.ContainerItemType.Provisions;
-                        break;
-                    case 3:
-                        type = Enums.ContainerItemType.Vehicles;
-                        break;
-                    default:
-                        type = Enums.ContainerItemType.Equipment;
-                        break;
-                }
-
-                containers.Add(new Container(id, type));
-            }
-            return containers;
-        }
-
-        private void startSimulation()
+        #region Simulation
+        private void StartSimulation()
         {
             this.timer = new Timer();
             //Interval in ms
@@ -172,14 +79,16 @@ namespace HarborUWP.Models
             foreach (String log in UpdateShips())
             {
                 Debug.WriteLine(log);
-            }            
+            }
         }
 
-        public void stopSimulation()
+        public void StopSimulation()
         {
             this.timer.Stop();
         }
+        #endregion 
 
+        #region Update
         public List<String> UpdateShips()
         {
 
@@ -216,5 +125,6 @@ namespace HarborUWP.Models
             }
             return returnList;
         }
+        #endregion
     }
 }

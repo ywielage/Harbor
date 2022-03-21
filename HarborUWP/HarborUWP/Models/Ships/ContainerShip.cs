@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarborUWP.Models.ShipTypes
+namespace HarborUWP.Models.Ships
 {
     internal class ContainerShip : Ship
     {

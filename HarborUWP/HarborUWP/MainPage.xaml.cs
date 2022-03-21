@@ -40,7 +40,7 @@ namespace HarborUWP
 
         private void newHarborButton_Click(object sender, RoutedEventArgs e)
         {
-            //controller.Initialize();
+            controller.Initialize();
             eventLogListBox.Items.Clear();
             timeStamp = new TimeStamp(1, 0, 23);
         }
