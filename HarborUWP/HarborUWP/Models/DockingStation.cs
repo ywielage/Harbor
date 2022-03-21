@@ -1,11 +1,11 @@
-﻿using HarborApp.Models.ShipTypes;
+﻿using HarborUWP.Models.ShipTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarborApp.Models
+namespace HarborUWP.Models
 {
     internal class DockingStation
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarborApp.Models
+namespace HarborUWP.Models
 {
     internal class Warehouse
     {

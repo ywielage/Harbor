@@ -1,4 +1,4 @@
-﻿using HarborApp.Models.ShipTypes;
+﻿using HarborUWP.Models.ShipTypes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace HarborApp.Models
+namespace HarborUWP.Models
 {
     internal class Controller
     {
         public Harbor Harbor { get; set; }
         public List<Ship> Ships { get; set; }
         //aanpassen in de UI zodat je kan selecteren of het via threaded wordt gerunt om te bewijzen dat het threaded sneller is
-        private bool runThreaded;
+        public bool runThreaded { get; set; }
 
         private Timer timer;
 

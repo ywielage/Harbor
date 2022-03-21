@@ -1,11 +1,11 @@
-﻿using HarborApp.Models.Enums;
+﻿using HarborUWP.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HarborApp.Models.ShipTypes
+namespace HarborUWP.Models.ShipTypes
 {
     internal class OilTankerShip : Ship
     {
