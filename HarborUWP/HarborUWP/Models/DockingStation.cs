@@ -9,8 +9,8 @@ namespace HarborUWP.Models
 {
     internal class DockingStation
     {
-        public int Number { get; set; }
-        public Ship Ship { get; set; }
+        private int Number { get; set; }
+        private Ship Ship { get; set; }
 
         public DockingStation(int number)
         {
@@ -21,6 +21,16 @@ namespace HarborUWP.Models
         public bool IsOccupied()
         {
             return Ship != null;
+        }
+
+        public void DockShip(Ship ship)
+        {
+            this.Ship = ship;
+        }
+
+        public void LeaveShip()
+        {
+            this.Ship = null;
         }
     }
 }
