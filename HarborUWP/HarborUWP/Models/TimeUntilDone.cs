@@ -22,5 +22,14 @@ namespace HarborUWP.Models
                 DurationInMins--;
             }
         }
+
+        public bool IsDone() 
+        {
+            if (DurationInMins <= 0) 
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

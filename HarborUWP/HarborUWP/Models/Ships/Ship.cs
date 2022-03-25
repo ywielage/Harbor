@@ -51,7 +51,7 @@ namespace HarborUWP.Models.Ships
         {
             TimeUntilDone.Update();
 
-            if (TimeUntilDone.DurationInMins == 0)
+            if (TimeUntilDone.IsDone())
             {
                 TimeUntilDone = SetNewTimeUntilDone();
 
