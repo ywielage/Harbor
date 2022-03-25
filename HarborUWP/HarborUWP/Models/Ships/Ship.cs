@@ -96,5 +96,16 @@ namespace HarborUWP.Models.Ships
                     return ShipTypes.BulkCarrier;
             }
         }
+        public string StatusConverter(State state)
+        {
+            switch (state)
+            {
+                default: return State.ToString().ToLower();
+                case State.InOpenWaters:
+                    return "in open waters";
+                case State.WaitingInPortWaters:
+                    return "waiting in port waters";
+            }
+        }
     }
 }
