@@ -77,7 +77,7 @@ namespace HarborUWP.Models.Ships
                         break;
                 }
             }
-            return $"Ship {Id} is now {State.ToString().ToLower()}, for another {TimeUntilDone.DurationInMins} minutes";
+            return $"Ship {Id} is now {StatusConverter(State)}, for another {TimeUntilDone.DurationInMins} minutes";
         }
 
         public static ShipTypes GenerateRandomShipType()
@@ -100,11 +100,11 @@ namespace HarborUWP.Models.Ships
         {
             switch (state)
             {
-                default: return State.ToString().ToLower();
                 case State.InOpenWaters:
                     return "in open waters";
                 case State.WaitingInPortWaters:
                     return "waiting in port waters";
+                default: return State.ToString().ToLower();
             }
         }
     }
