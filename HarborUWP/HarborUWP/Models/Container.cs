@@ -18,7 +18,7 @@ namespace HarborUWP.Models
             ContainerItemType = containerItemType;
         }
 
-        public List<Container> createContainers(int size, int ShipId)
+        public List<Container> CreateContainers(int size, int ShipId)
         {
             List<Container> containers = new List<Container>();
             Random random = new Random();
