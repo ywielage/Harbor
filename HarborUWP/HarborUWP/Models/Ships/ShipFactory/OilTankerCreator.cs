@@ -11,7 +11,7 @@ namespace HarborUWP.Models.Ships.ShipFactory
         public override Ship CreateProduct(int id)
         {
             Random random = new Random();
-            return new OilTankerShip(id, Enums.State.InOpenWaters, 80, random.Next(70000, 190000));
+            return new OilTankerShip(id, 80, random.Next(70000, 190000));
         }
     }
 }

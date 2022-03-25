@@ -12,7 +12,7 @@ namespace HarborUWP.Models.Ships
         public int Inventory { get; set; }
         public BulkItemType BulkItemType { get; set; }
 
-        public BulkCarrierShip(int id, State state, int minPercantageCapacity, int maxCapacity, int inventory, BulkItemType bulkItemType) : base(id, state, minPercantageCapacity, maxCapacity)
+        public BulkCarrierShip(int id, int minPercantageCapacity, int maxCapacity, int inventory, BulkItemType bulkItemType) : base(id, minPercantageCapacity, maxCapacity)
         {
             Inventory = inventory;
             BulkItemType = bulkItemType;

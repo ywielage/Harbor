@@ -15,11 +15,11 @@ namespace HarborUWP.Models.Ships
         protected int minPercantageCapacity = 80;
         protected int maxCapacity;
 
-        protected Ship(int id, State state, int minPercantageCapacity, int maxCapacity)
+        protected Ship(int id, int minPercantageCapacity, int maxCapacity)
         {
             Id = id;
-            State = state;
-            TimeUntilDone = null;
+            State = State.InOpenWaters;
+            TimeUntilDone = SetNewTimeUntilDone();
             this.minPercantageCapacity = minPercantageCapacity;
             this.maxCapacity = maxCapacity;
         }
@@ -39,25 +39,47 @@ namespace HarborUWP.Models.Ships
             throw new NotImplementedException();
         }
 
-        public void OffLoad()
+        private TimeUntilDone SetNewTimeUntilDone() 
         {
-            throw new NotImplementedException();
+            Random random = new Random();
+            int duration = random.Next(1, 4);
+            TimeUntilDone td = new TimeUntilDone(duration);
+            return td;
         }
 
-        public void Load()
+        public string Update() 
         {
-            throw new NotImplementedException();
+            TimeUntilDone.Update();
+
+            if (TimeUntilDone.DurationInMins == 0)
+            {
+                TimeUntilDone = SetNewTimeUntilDone();
+
+                switch (State)
+                {
+                    case State.InOpenWaters:
+                        State = State.WaitingInPortWaters;
+                        break;
+                    case State.WaitingInPortWaters:
+                        State = State.Docking;
+                        break;
+                    case State.Docking:
+                        State = State.Offloading;
+                        break;
+                    case State.Loading:
+                        State = State.Leaving;
+                        break;
+                    case State.Offloading:
+                        State = State.Loading;
+                        break;
+                    case State.Leaving:
+                        State = State.InOpenWaters;
+                        break;
+                }
+            }
+            return $"Ship {Id} is now {State.ToString().ToLower()}, for another {TimeUntilDone.DurationInMins} minutes";
         }
 
-        public void Dock()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Leave()
-        {
-            throw new NotImplementedException();
-        }
         public static ShipTypes GenerateRandomShipType()
         {
             Random random = new Random();

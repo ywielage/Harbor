@@ -13,7 +13,7 @@ namespace HarborUWP.Models.Ships.ShipFactory
             Random random = new Random();
             int size = random.Next(17000, 20000);
             //add createContatainerShip()
-            return new ContainerShip(id, Enums.State.InOpenWaters, 80, size);
+            return new ContainerShip(id, 80, size);
         }
     }
 }

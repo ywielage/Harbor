@@ -11,7 +11,7 @@ namespace HarborUWP.Models.Ships
     {
         public int Inventory { get; set; }
 
-        public OilTankerShip(int id, State state, int minPercantageCapacity, int maxCapacity) : base(id, state, minPercantageCapacity, maxCapacity)
+        public OilTankerShip(int id, int minPercantageCapacity, int maxCapacity) : base(id, minPercantageCapacity, maxCapacity)
         {
             Inventory = 0;
         }

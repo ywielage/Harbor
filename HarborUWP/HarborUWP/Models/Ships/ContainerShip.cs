@@ -9,11 +9,11 @@ namespace HarborUWP.Models.Ships
 {
     internal class ContainerShip : Ship
     {
-        public List<Container> containers { get; set; }
+        public List<Container> Containers { get; set; }
 
-        public ContainerShip(int id, State state, int minPercantageCapacity, int maxCapacity) : base(id, state, minPercantageCapacity, maxCapacity)
+        public ContainerShip(int id, int minPercantageCapacity, int maxCapacity) : base(id, minPercantageCapacity, maxCapacity)
         {
-            containers = new List<Container>();
+            Containers = new List<Container>();
         }
     }
 }
