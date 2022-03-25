@@ -24,6 +24,7 @@ namespace HarborUWP
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private bool isPaused;
         private Controller controller;
         private TimeStamp timeStamp;
 
@@ -31,6 +32,8 @@ namespace HarborUWP
         {
             this.InitializeComponent();
             controller = new Controller();
+            controller.setMainPage(this);
+            isPaused = false;
         }
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -40,12 +43,13 @@ namespace HarborUWP
 
         private void newHarborButton_Click(object sender, RoutedEventArgs e)
         {
+            controller.runThreaded = (bool)runTreadedCheckBox.IsChecked;
             controller.Initialize();
             eventLogListBox.Items.Clear();
             timeStamp = new TimeStamp(1, 0, 23);
         }
 
-        private async void timeSkipButton_Click(object sender, RoutedEventArgs e)
+        private async void pauseButton_Click(object sender, RoutedEventArgs e)
         {
             if (controller.Harbor == null)
             {
@@ -55,9 +59,11 @@ namespace HarborUWP
                 return;
             }
 
+            controller.StopSimulation();
+
             controller.runThreaded = (bool)runTreadedCheckBox.IsChecked;
 
-            if (timeStamp.IsStartDay())
+           /* if (timeStamp.IsStartDay())
             {
                 eventLogListBox.Items.Add(timeStamp.StartDay());
             }
@@ -81,7 +87,7 @@ namespace HarborUWP
             if (timeStamp.IsEndOfDay())
             {
                 eventLogListBox.Items.Add(timeStamp.EndDay());
-            }
+            }*/
         }
 
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -18,14 +19,20 @@ namespace HarborUWP.Models
         //aanpassen in de UI zodat je kan selecteren of het via threaded wordt gerunt om te bewijzen dat het threaded sneller is
         public bool runThreaded { get; set; }
 
-        private Timer timer;
+        private System.Timers.Timer timer;
 
+        private MainPage mainPage;
         public Controller()
         {
             runThreaded = false;
         }
 
         #region Initialization
+
+        public void setMainPage(MainPage mainPage)
+        {
+            this.mainPage = mainPage;   
+        }
         public void Initialize()
         {
             InitializeHarbor();
@@ -67,9 +74,9 @@ namespace HarborUWP.Models
         #region Simulation
         private void StartSimulation()
         {
-            this.timer = new Timer();
+            this.timer = new System.Timers.Timer();
             //Interval in ms
-            this.timer.Interval = 2000;
+            this.timer.Interval = 10000;
             this.timer.Elapsed += tmr_Elapsed;
             this.timer.Start();
         }
@@ -78,6 +85,7 @@ namespace HarborUWP.Models
         {
             foreach (String log in UpdateShips())
             {
+                //update front end log with new log entries
                 Debug.WriteLine(log);
             }
         }
@@ -104,27 +112,79 @@ namespace HarborUWP.Models
 
         private List<String> UpdateShipsThreaded()
         {
+            //maak een stopwatch om te timen
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //een lijst om de return waardes van alle ships op te halen
             List<String> returnList = new List<String>();
+
+            //loop door alle ships
             foreach (Ship ship in Ships)
             {
-                //call de update in de ships die als het goed is een string van wat er is gebeurt returnt
-                //returnList.Add(ship.Update());
-                returnList.Add("Threaded ship updated" + ship.Id + ship.GetType());
+                //maak een update task die de update in de ships calt
+                WaitCallback updateTask = (aShip) =>
+                {
+                    //haal het megegeven ship op om te gebruiken
+                    Ship selectedShip = aShip as Ship;
+
+                    //roep de ships update aan en sla het resultaat op
+                    Thread.Sleep(50);//voor test, komt later in ships update method
+                    String result = selectedShip.Update();
+                    //String result = "Threaded ship updated " + selectedShip.Id + " " + selectedShip.GetType();
+
+                    //lock de lijst om te zorgen dat ze niet tegelijk dingen toevoegen
+                    lock (returnList)
+                    {
+                        //voeg het resultaat toe aan de lijst
+                        returnList.Add(result);
+                    } 
+                };
+
+                //voeg de updateTask toe met een ship uit de loop
+                ThreadPool.QueueUserWorkItem(updateTask, ship);
+            };
+
+            while (true)
+            {
+                //zorg ervoor dat hij alleen stopt als hij klaar is met alle ships
+                if (returnList.Count == Ships.Count)
+                {
+                    //stop de stopwatch om te meten of hij klaar is
+                    stopwatch.Stop();
+                    String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
+                    //voeg een string oveer de stopwatch terug aan de returnList
+                    returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships");
+                    return returnList;
+                }
             }
-            return returnList;
         }
 
         private List<String> UpdateShipsNonThreaded()
         {
+            //maak een stopwatch om te timen
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //een lijst om de return waardes van alle ships op te halen
             List<String> returnList = new List<String>();
+
+            //loop door alle ships
             foreach (Ship ship in Ships)
             {
-                //call de update in de ships die als het goed is een string van wat er is gebeurt returnt
-                //returnList.Add(ship.Update());
-                returnList.Add("Non Threaded ship updated" + ship.Id + ship.GetType());
+                //roep de ships update aan en sla het resultaat op
+                Thread.Sleep(50);//voor test, komt later in ships update method
+                returnList.Add(ship.Update());
+                //returnList.Add("Non Threaded ship updated" + ship.Id + ship.GetType());
             }
+            //stop de stopwatch om te meten of hij klaar is
+            stopwatch.Stop();
+            String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
+            //voeg een string oveer de stopwatch terug aan de returnList
+            returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships");
             return returnList;
         }
+
         #endregion
     }
 }
