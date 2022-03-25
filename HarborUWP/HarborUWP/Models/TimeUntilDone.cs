@@ -17,7 +17,10 @@ namespace HarborUWP.Models
 
         public void Update()
         {
-            throw new NotImplementedException();
+            if (DurationInMins != 0)
+            {
+                DurationInMins--;
+            }
         }
     }
 }
