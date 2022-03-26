@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace HarborUWP.Models.Ships
 {
@@ -105,6 +106,78 @@ namespace HarborUWP.Models.Ships
                 case State.WaitingInPortWaters:
                     return "waiting in port waters";
                 default: return State.ToString().ToLower();
+            }
+        }
+
+        public void Offload(Harbor harbor, int amount)
+        {
+            if (this is BulkCarrierShip)
+            {
+                BulkCarrierShip ship = (BulkCarrierShip)this;
+                ship.Inventory -= amount;
+            }
+            else if (this is ContainerShip)
+            {
+                ContainerShip ship = (ContainerShip)this;
+                int maxSizeContainer = ship.Containers[0].maxSize;
+                ship.totalWeight = ship.totalWeight - amount;
+                                double newAmountOfContainers = (double)ship.totalWeight / (double)maxSizeContainer;
+                ship.Containers.Clear();
+                // Create Containers based on amount of weight
+                ship.CreateContainers(ship.totalWeight / maxSizeContainer,0, new Container(0,ContainerItemType.Vehicles,0).maxSize);
+                // Create extra container with remainder weight
+                int leftoverWeight = (int)(maxSizeContainer * (newAmountOfContainers - Math.Truncate(newAmountOfContainers)));
+                if (leftoverWeight > 0)
+                {
+                    ship.CreateContainers(1, 0, leftoverWeight);
+                }
+            }
+            else if (this is OilTankerShip)
+            {
+                OilTankerShip ship = (OilTankerShip)this;
+                ship.Inventory -= amount;
+            }
+        }
+
+        private void load(Harbor harbor, int amount)
+        {
+            if (this is BulkCarrierShip)
+            {
+                BulkCarrierShip ship = (BulkCarrierShip)this;
+                ship.Inventory += amount;
+            }
+            else if (this is ContainerShip)
+            {
+                ContainerShip ship = (ContainerShip)this;
+                int maxSizeContainer = ship.Containers[0].maxSize;
+                ship.totalWeight = ship.totalWeight - amount;
+                double newAmountOfContainers = (double)ship.totalWeight / (double)maxSizeContainer;
+                // Create Containers based on amount of weight
+                ship.CreateContainers(ship.totalWeight / maxSizeContainer, 0, new Container(0, ContainerItemType.Vehicles, 0).maxSize);
+                // Create extra container with remainder weight
+                int leftoverWeight = (int)(maxSizeContainer * (newAmountOfContainers - Math.Truncate(newAmountOfContainers)));
+                 foreach (Container container in ship.Containers)
+                {
+                    if(container.curSize < 4000 && (container.curSize + leftoverWeight) < 4000)
+                    {
+                        container.curSize = container.curSize + leftoverWeight;
+                        break;
+                    }
+                    else if(container.curSize < 4000 && (container.curSize + leftoverWeight) <= 4000)
+                    {
+                        leftoverWeight = leftoverWeight - container.curSize;
+                        container.curSize = container.curSize + leftoverWeight;
+                    }
+                }
+                if (leftoverWeight > 0)
+                {
+                    ship.CreateContainers(1, 0, leftoverWeight);
+                }
+            }
+            else if (this is OilTankerShip)
+            {
+                OilTankerShip ship = (OilTankerShip)this;
+                ship.Inventory += amount;
             }
         }
     }

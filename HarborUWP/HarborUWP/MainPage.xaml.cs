@@ -1,4 +1,6 @@
 ﻿using HarborUWP.Models;
+using HarborUWP.Models.Ships;
+using HarborUWP.Models.Ships.ShipFactory;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
