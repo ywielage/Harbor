@@ -63,7 +63,8 @@ namespace HarborUWP.Models
             this.Ships = new List<Ship>();
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
-            for (int i = 0; i < 100; i++)
+            //TODO: variabele voor amount of ships created, gebruiken in for loop 
+            for (int i = 1; i <= 5; i++)
             {
                 int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
@@ -76,8 +77,10 @@ namespace HarborUWP.Models
         {
             this.timer = new System.Timers.Timer();
             //Interval in ms
-            this.timer.Interval = 10000;
-            this.timer.Elapsed += tmr_Elapsed;
+            Debug.WriteLine("started Timer");
+            this.timer.Interval = 1000;
+            //this.timer.Elapsed += tmr_Elapsed;
+            this.timer.Elapsed += mainPage.tmr_Elapsed;
             this.timer.Start();
         }
 
@@ -88,14 +91,18 @@ namespace HarborUWP.Models
                 //update front end log with new log entries
                 Debug.WriteLine(log);
             }
+            //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
         }
 
         public void StopSimulation()
         {
-            this.timer.Stop();
+            this.timer.Elapsed -= mainPage.tmr_Elapsed;
         }
         #endregion 
-
+        public void ContinueSimulation()
+        {
+            this.timer.Elapsed += mainPage.tmr_Elapsed;
+        }
         #region Update
         public List<String> UpdateShips()
         {
@@ -130,8 +137,12 @@ namespace HarborUWP.Models
 
                     //roep de ships update aan en sla het resultaat op
                     Thread.Sleep(50);//voor test, komt later in ships update method
-                    String result = selectedShip.Update();
-                    //String result = "Threaded ship updated " + selectedShip.Id + " " + selectedShip.GetType();
+
+                    //TODO: haal de huidige shipstate op, check if dockingstation vrij, zo ja niks, zo nee verhoog time until done
+                    String result = "\t" + selectedShip.Update();
+
+                    //TODO: haal de geupdate shipstate op, als de shipstate verandert moet eventueel de dockinstation ook docken met dat ship
+
 
                     //lock de lijst om te zorgen dat ze niet tegelijk dingen toevoegen
                     lock (returnList)
@@ -145,7 +156,7 @@ namespace HarborUWP.Models
                 ThreadPool.QueueUserWorkItem(updateTask, ship);
             };
 
-            while (true)
+            while (returnList.Count <= Ships.Count)
             {
                 //zorg ervoor dat hij alleen stopt als hij klaar is met alle ships
                 if (returnList.Count == Ships.Count)
@@ -153,11 +164,13 @@ namespace HarborUWP.Models
                     //stop de stopwatch om te meten of hij klaar is
                     stopwatch.Stop();
                     String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-                    //voeg een string oveer de stopwatch terug aan de returnList
-                    returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships");
+                    //voeg een string over de stopwatch terug aan de returnList
+                    returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading");
                     return returnList;
                 }
             }
+            returnList.Add("Something went wrong");
+            return returnList;
         }
 
         private List<String> UpdateShipsNonThreaded()
@@ -174,15 +187,23 @@ namespace HarborUWP.Models
             {
                 //roep de ships update aan en sla het resultaat op
                 Thread.Sleep(50);//voor test, komt later in ships update method
-                returnList.Add(ship.Update());
+                returnList.Add("\t" + ship.Update());
                 //returnList.Add("Non Threaded ship updated" + ship.Id + ship.GetType());
             }
             //stop de stopwatch om te meten of hij klaar is
             stopwatch.Stop();
             String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-            //voeg een string oveer de stopwatch terug aan de returnList
-            returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships");
+            //voeg een string over de stopwatch terug aan de returnList
+            returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, without threading");
             return returnList;
+        }
+
+        private List<String> manageWarehouse()
+        {
+            List<String> result;
+            result = new List<String>();
+            //TODO: if warehouse bijna leeg, this.Harbor.Warehouse.add, result.Add("")
+            return result;
         }
 
         #endregion

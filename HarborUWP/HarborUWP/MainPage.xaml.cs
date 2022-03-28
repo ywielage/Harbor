@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using System.Diagnostics;
+using Windows.UI.Core;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -62,7 +63,19 @@ namespace HarborUWP
                 return;
             }
 
-            controller.StopSimulation();
+            if (isPaused)
+            {
+                controller.ContinueSimulation();
+                this.pauseButton.Content = "Pause Simulation";
+                this.isPaused = false;
+            }
+            else
+            {
+                controller.StopSimulation();
+                this.pauseButton.Content = "Continue Simulation";
+                this.isPaused = true;
+            }
+            
 
             controller.runThreaded = (bool)runTreadedCheckBox.IsChecked;
 
@@ -91,6 +104,18 @@ namespace HarborUWP
             {
                 eventLogListBox.Items.Add(timeStamp.EndDay());
             }*/
+        }
+
+        public async void tmr_Elapsed(object sender, EventArgs e)
+        {
+            foreach (String log in controller.UpdateShips())
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    eventLogListBox.Items.Add(log);
+                });
+                //Debug.WriteLine(log);
+            }
         }
 
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)
