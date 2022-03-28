@@ -9,16 +9,51 @@ namespace HarborUWP.Models
 {
     internal class Container
     {
-        public int Id { get; set; }
-        public int maxSize { get; set; }
-        public int curSize { get; set; }
+        public string Id { get; set; }
+        public int MaxSize { get; set; }
+        public int CurrSize { get; set; }
         public ContainerItemType ContainerItemType { get; set; }
 
-        public Container(int id, ContainerItemType containerItemType, int curSize)
+        public Container(string id, ContainerItemType containerItemType)
         {
             Id = id;
             ContainerItemType = containerItemType;
-            maxSize = 4000;
+            MaxSize = 4000;
+        }
+
+        public static List<Container> CreateContainers(int size, int shipId)
+        {
+            List<Container> containerList = new List<Container>();
+
+            for (int i = 0; i < size; i++)
+            {
+                //aan de hand van het ship ID en de loop waarde zij er altijd uniek ID's
+                string id = shipId + "-" + i;
+
+                //random item type
+                ContainerItemType type;
+                switch (new Random().Next(5))
+                {
+                    case 0:
+                    default:
+                        type = ContainerItemType.Equipment;
+                        break;
+                    case 1:
+                        type = ContainerItemType.Furniture;
+                        break;
+                    case 2:
+                        type = ContainerItemType.Provisions;
+                        break;
+                    case 3:
+                        type = ContainerItemType.Vehicles;
+                        break;
+                    case 4:
+                        type = ContainerItemType.Equipment;
+                        break;
+                }
+                containerList.Add(new Container(id, type));
+            }
+            return containerList;
         }
     }
 }

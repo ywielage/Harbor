@@ -138,6 +138,7 @@
     <Compile Include="Models\Ships\Ship.cs" />
     <Compile Include="Models\Ships\ShipFactory\ShipCreator.cs" />
     <Compile Include="Models\Enums\ShipTypes.cs" />
+    <Compile Include="Models\StorageObject.cs" />
     <Compile Include="Models\TimeStamp.cs" />
     <Compile Include="Models\TimeUntilDone.cs" />
     <Compile Include="Models\Warehouse.cs" />
