@@ -20,7 +20,7 @@ namespace HarborUWP.Models.Ships
         {
             Id = id;
             State = State.InOpenWaters;
-            TimeUntilDone = SetNewTimeUntilDone();
+            SetNewTimeUntilDone(1, 15);
             this.minPercantageCapacity = minPercantageCapacity;
             this.maxCapacity = maxCapacity;
         }
@@ -40,12 +40,12 @@ namespace HarborUWP.Models.Ships
             throw new NotImplementedException();
         }
 
-        private TimeUntilDone SetNewTimeUntilDone() 
+        private void SetNewTimeUntilDone(int minDuration, int maxDuration) 
         {
             Random random = new Random();
-            int duration = random.Next(1, 4);
-            TimeUntilDone td = new TimeUntilDone(duration);
-            return td;
+            int duration = random.Next(minDuration, maxDuration + 1);
+            TimeUntilDone = new TimeUntilDone(duration);
+            
         }
 
         public string Update() 
@@ -54,27 +54,34 @@ namespace HarborUWP.Models.Ships
 
             if (TimeUntilDone.IsDone())
             {
-                TimeUntilDone = SetNewTimeUntilDone();
-
                 switch (State)
                 {
                     case State.InOpenWaters:
                         State = State.WaitingInPortWaters;
+                        SetNewTimeUntilDone(1,15);
                         break;
                     case State.WaitingInPortWaters:
+                        //TODO: check if DockingStation is available yes?--> set state Docking, no? --> set duration again
                         State = State.Docking;
+                        SetNewTimeUntilDone(1,5);
                         break;
                     case State.Docking:
                         State = State.Offloading;
-                        break;
-                    case State.Loading:
-                        State = State.Leaving;
+                        //TODO: start offloading
+                        SetNewTimeUntilDone(15,40);
                         break;
                     case State.Offloading:
                         State = State.Loading;
+                        //TODO: start loading
+                        SetNewTimeUntilDone(15,40);
+                        break;
+                    case State.Loading:
+                        State = State.Leaving;
+                        SetNewTimeUntilDone(1,5);
                         break;
                     case State.Leaving:
                         State = State.InOpenWaters;
+                        SetNewTimeUntilDone(5,20);
                         break;
                 }
             }
