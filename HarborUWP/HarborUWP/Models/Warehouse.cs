@@ -16,13 +16,14 @@ namespace HarborUWP.Models
         public StorageObject TonsOfWheat { get; }
         public List<Container> Containers { get; }
 
-        public Warehouse()
+        public Warehouse(int amountOfBarrelsOfOil, int amountOfTonsOfSand, int amountOfTonsOfCoal, int amountOfTonsOfWheat, int amountOfContainers)
         {
-            BarrelsOfOil = new StorageObject(0);
-            TonsOfSand = new StorageObject(0);
-            TonsOfCoal = new StorageObject(0);
-            TonsOfWheat = new StorageObject(0);
+            BarrelsOfOil = new StorageObject(amountOfBarrelsOfOil);
+            TonsOfSand = new StorageObject(amountOfTonsOfSand);
+            TonsOfCoal = new StorageObject(amountOfTonsOfCoal);
+            TonsOfWheat = new StorageObject(amountOfTonsOfWheat);
             Containers = new List<Container>();
+            Containers.AddRange(Container.CreateContainers(amountOfContainers, 0));
         }
 
         public void AddBarrelsOfOil(int amount)

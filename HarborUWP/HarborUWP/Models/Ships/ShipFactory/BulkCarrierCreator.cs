@@ -12,7 +12,10 @@ namespace HarborUWP.Models.Ships.ShipFactory
         public override Ship CreateProduct(int id)
         {
             Random random = new Random();
-            return new BulkCarrierShip(id, 80, random.Next(18000, 20000), 0, GenerateBulkItemType(random));
+            int minPercantage = 80;
+            int maxCapacity = random.Next(18000, 20000);
+            int inventory = random.Next((int)(maxCapacity * (minPercantage / 100)), maxCapacity);
+            return new BulkCarrierShip(id, 80, maxCapacity, inventory, GenerateBulkItemType(random));
         }
 
         private BulkItemType GenerateBulkItemType(Random random)

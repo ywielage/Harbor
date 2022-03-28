@@ -11,7 +11,10 @@ namespace HarborUWP.Models.Ships.ShipFactory
         public override Ship CreateProduct(int id)
         {
             Random random = new Random();
-            return new OilTankerShip(id, 80, random.Next(70000, 190000));
+            int minPercantage = 80;
+            int maxCapacity = random.Next(70000, 190000);
+            int inventory = random.Next((int)(maxCapacity * (minPercantage / 100)), maxCapacity);
+            return new OilTankerShip(id, 80, maxCapacity, inventory);
         }
     }
 }

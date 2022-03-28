@@ -12,10 +12,10 @@ namespace HarborUWP.Models.Ships
         public List<Container> Containers { get; set; }
         public int TotalWeight { get; set; }
 
-        public ContainerShip(int id, int minPercantageCapacity, int maxCapacity) : base(id, minPercantageCapacity, maxCapacity)
+        public ContainerShip(int id, int minPercantageCapacity, int maxCapacity, int amountOfContainers) : base(id, minPercantageCapacity, maxCapacity)
         {
             Containers = new List<Container>();
-            Container.CreateContainers(5, id);
+            Container.CreateContainers(amountOfContainers, id);
         }
     }
 }

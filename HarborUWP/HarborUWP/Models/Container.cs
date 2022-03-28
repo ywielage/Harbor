@@ -19,13 +19,14 @@ namespace HarborUWP.Models
             Id = id;
             ContainerItemType = containerItemType;
             MaxSize = 4000;
+            CurrSize = 0;
         }
 
-        public static List<Container> CreateContainers(int size, int shipId)
+        public static List<Container> CreateContainers(int amount, int shipId)
         {
             List<Container> containerList = new List<Container>();
 
-            for (int i = 0; i < size; i++)
+            for (int i = 0; i < amount; i++)
             {
                 //aan de hand van het ship ID en de loop waarde zij er altijd uniek ID's
                 string id = shipId + "-" + i;
