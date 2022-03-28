@@ -7,8 +7,8 @@
     <ProjectGuid>{9CE46C41-2DB9-4FC0-82A6-B3C6AC29989E}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HarborUWP</RootNamespace>
-    <AssemblyName>HarborUWP</AssemblyName>
+    <RootNamespace>BlueDuckyHarbor</RootNamespace>
+    <AssemblyName>BlueDuckyHarbor</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
