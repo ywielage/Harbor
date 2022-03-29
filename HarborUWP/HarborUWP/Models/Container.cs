@@ -10,16 +10,14 @@ namespace HarborUWP.Models
     internal class Container
     {
         public string Id { get; set; }
-        public int MaxSize { get; set; }
-        public int CurrSize { get; set; }
+        public int Size { get; set; }
         public ContainerItemType ContainerItemType { get; set; }
 
         public Container(string id, ContainerItemType containerItemType)
         {
             Id = id;
             ContainerItemType = containerItemType;
-            MaxSize = 4000;
-            CurrSize = 0;
+            Size = 4000;
         }
 
         public static List<Container> CreateContainers(int amount, int shipId)

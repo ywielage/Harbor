@@ -17,5 +17,21 @@ namespace HarborUWP.Models.Ships
             Containers = new List<Container>();
             Container.CreateContainers(amountOfContainers, id);
         }
+        public override void OffLoad(Harbor harbor, int amount, ContainerItemType itemType)
+        {
+            for(int i = 0; i < amount; i++)
+            {
+                if(Containers.Count > 0)
+                {
+                    Containers.RemoveAt(Containers.Count - 1);
+                    harbor.Warehouse.RemoveContainers()
+                }
+            }
+        }
+
+        public override void Load(Harbor harbor, int amount)
+        {
+            new Containe
+        }
     }
 }

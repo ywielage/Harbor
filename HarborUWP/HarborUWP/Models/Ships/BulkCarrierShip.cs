@@ -17,5 +17,16 @@ namespace HarborUWP.Models.Ships
             Inventory = inventory;
             BulkItemType = bulkItemType;
         }
+
+/*        public override void OffLoad(Harbor harbor, int amount)
+        {
+            Inventory -= amount;
+            
+        }
+
+        public override void Load(Harbor harbor, int amount)
+        {
+            Inventory -= amount;
+        }*/
     }
 }
