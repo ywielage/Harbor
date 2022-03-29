@@ -122,6 +122,12 @@ namespace HarborUWP
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
+                eventLogListBox.SelectedIndex = eventLogListBox.Items.Count - 1;
+                eventLogListBox.ScrollIntoView(eventLogListBox.SelectedItem);
+            });
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
                 UpdateDockingStationsStackPanelAsync(controller.Harbor.DockingStations);
             });
         }
