@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HarborUWP.Models
 {
-    class TimeStamp
+    public class TimeStamp
     {
         public int DayCount { get; set; }
         public int CurrHour { get; set; }

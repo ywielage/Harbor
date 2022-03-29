@@ -34,12 +34,14 @@ namespace HarborUWP
         private bool isPaused;
         private Controller controller;
         private TimeStamp timeStamp;
+        private DockingStationView dockingStationView;
 
         public MainPage()
         {
             this.InitializeComponent();
             controller = new Controller();
             controller.setMainPage(this);
+            dockingStationView = new DockingStationView();
             isPaused = false;
         }
 
@@ -53,7 +55,9 @@ namespace HarborUWP
             controller.runThreaded = (bool)runTreadedCheckBox.IsChecked;
             controller.Initialize();
             eventLogListBox.Items.Clear();
+            dockingStationView.Initialize(controller.Harbor.DockingStations, dockingStationStackPanel);
             timeStamp = new TimeStamp(1, 0, 23);
+            
         }
 
         private async void pauseButton_Click(object sender, RoutedEventArgs e)
@@ -128,91 +132,13 @@ namespace HarborUWP
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                UpdateDockingStationsStackPanelAsync(controller.Harbor.DockingStations);
+                dockingStationView.UpdateDockingStationsStackPanel(controller.Harbor.DockingStations, dockingStationStackPanel);
             });
         }
 
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)
         {
             eventLogListBox.Items.Clear();
-        }
-
-        private void UpdateDockingStationsStackPanelAsync(List<DockingStation> dockingStations)
-        {
-            dockingStationStackPanel.Children.Clear();
-            double panelWidth = dockingStationStackPanel.RenderSize.Width;
-
-            SolidColorBrush redBrush = new SolidColorBrush
-            {
-                Color = Colors.Red
-            };
-            SolidColorBrush greenBrush = new SolidColorBrush
-            {
-                Color = Colors.Green
-            };            
-
-            //Square root the amount of dockingstations to determine the amount of rows and colums
-            int rowAmount = (int)Math.Ceiling(Math.Sqrt(dockingStations.Count));
-            int currCount = 0;
-            double rectMargin = 1;
-
-            //Determine width and height per square based on width of parent StackPanel
-            double rectSize = (panelWidth - (rowAmount * 2 * rectMargin)) / rowAmount;
-
-            //Loop until all rows are filled
-            for (int i = 1; i <= rowAmount; i++)
-            {
-                StackPanel stackPanel = GenerateStackPanelRow(dockingStations, redBrush, greenBrush, rowAmount, ref currCount, rectMargin, rectSize);
-
-                //Add row to parent StackPanel
-                dockingStationStackPanel.Children.Add(stackPanel);
-            }
-        }
-
-        private StackPanel GenerateStackPanelRow(List<DockingStation> dockingStations, SolidColorBrush redBrush, SolidColorBrush greenBrush, int rowAmount, ref int currCount, double rectMargin, double rectSize)
-        {
-            //Create each row for the parent StackPanel
-            StackPanel stackPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal
-            };
-
-            //Loop until end of row or until end of dockingstations count, whichever one comes first
-            for (int j = 1; j <= rowAmount && currCount <= dockingStations.Count - 1; currCount++, j++)
-            {
-                GenerateStackPanelCell(dockingStations, redBrush, greenBrush, currCount, rectMargin, rectSize, stackPanel);
-            }
-
-            return stackPanel;
-        }
-
-        private void GenerateStackPanelCell(List<DockingStation> dockingStations, SolidColorBrush redBrush, SolidColorBrush greenBrush, int currCount, double rectMargin, double rectSize, StackPanel stackPanel)
-        {
-            Rectangle rectangle;
-            //Red square for occupied dockingstation
-            if (dockingStations[currCount].IsOccupied())
-            {
-                rectangle = new Rectangle
-                {
-                    Fill = redBrush,
-                    Width = rectSize,
-                    Height = rectSize,
-                    Margin = new Thickness(rectMargin)
-                };
-            }
-            //Green square for vacant dockingstation
-            else
-            {
-                rectangle = new Rectangle
-                {
-                    Fill = greenBrush,
-                    Width = rectSize,
-                    Height = rectSize,
-                    Margin = new Thickness(rectMargin)
-                };
-            }
-            //Add square to row StackPanel
-            stackPanel.Children.Add(rectangle);
         }
     }
 }

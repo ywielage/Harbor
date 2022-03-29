@@ -19,14 +19,14 @@
             <ColumnDefinition Width="380"/>
             <ColumnDefinition Width="380"/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="eventLogListBox" Margin="10,10,10,760" SelectionChanged="ListBox_SelectionChanged" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1"/>
+        <ListBox x:Name="eventLogListBox" Margin="10,10,10,760" SelectionChanged="ListBox_SelectionChanged" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" FontSize="16"/>
         <Button x:Name="pauseButton" Content="Pause Simulation" Margin="10,10,10,50" FontSize="24" Click="pauseButton_Click" HorizontalAlignment="Stretch" Grid.RowSpan="2" VerticalAlignment="Stretch" Grid.Column="1"/>
         <Button x:Name="newHarborButton" Grid.Column="2" Content="Start new harbor" FontSize="16" Margin="10,10,10,10" VerticalAlignment="Stretch" Click="newHarborButton_Click" HorizontalAlignment="Stretch"/>
         <Button x:Name="clearEventLogButton" Grid.Column="2" Content="Clear eventlog" Margin="10,10,10,10" Grid.Row="1" VerticalAlignment="Stretch" FontSize="16" Click="clearEventLogButton_Click" HorizontalAlignment="Stretch"/>
         <CheckBox x:Name="runTreadedCheckBox" Grid.Column="1" Content="Check to run the application multi-threaded" Margin="10,28,10,10" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsChecked="True"/>
-        <ListBox Grid.Row="1" Margin="10,10,10,10" Grid.RowSpan="2"/>
         <TextBlock x:Name="tableLabel" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="Ships" FontSize="36" Height="50" VerticalAlignment="Bottom"/>
-        <StackPanel x:Name="dockingStationStackPanel" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,110,10,10" />
+        <StackPanel x:Name="dockingStationStackPanel" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,110,10,10" Background="#FF2B2B2B" />
+        <ListView x:Name="shipsListView" Grid.Row="1" Margin="10,10,10,10" Grid.RowSpan="2"/>
 
     </Grid>
 </Page>

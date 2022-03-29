@@ -125,6 +125,7 @@
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Controller.cs" />
     <Compile Include="Models\DockingStation.cs" />
+    <Compile Include="Models\DockingStationView.cs" />
     <Compile Include="Models\Enums\BulkItemType.cs" />
     <Compile Include="Models\Enums\ContainerItemType.cs" />
     <Compile Include="Models\Enums\State.cs" />
