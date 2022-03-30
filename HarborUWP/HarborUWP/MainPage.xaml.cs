@@ -134,11 +134,51 @@ namespace HarborUWP
             {
                 dockingStationView.UpdateDockingStationsStackPanel(controller.Harbor.DockingStations, dockingStationStackPanel);
             });
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                UpdateShipsListView(controller.Ships);
+            });
         }
 
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)
         {
             eventLogListBox.Items.Clear();
+        }
+
+        private void UpdateShipsListView(List<Ship> ships)
+        {
+            shipsListView.Items.Clear();
+            foreach (Ship ship in ships)
+            {
+                //TODO: Solution which doesnt have to create 5 objects for every ship
+                StackPanel stackPanel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    MaxHeight = 20,
+                    MinHeight = 20,
+                };
+
+                stackPanel.Children.Add(GenerateListViewItem(100, ship.Id.ToString()));
+                stackPanel.Children.Add(GenerateListViewItem(220, ship.GetType().ToString().Substring(23)));
+                stackPanel.Children.Add(GenerateListViewItem(240, ship.State.ToString()));
+                stackPanel.Children.Add(GenerateListViewItem(160, ship.TimeUntilDone.DurationInMins.ToString()));
+
+                shipsListView.Items.Add(stackPanel);
+            }
+        }
+
+        private ListViewItem GenerateListViewItem(int width, string content)
+        {
+            return new ListViewItem
+            {
+                MaxWidth = width,
+                MinWidth = width,
+                MaxHeight = 20,
+                MinHeight = 20,
+                Content = content,
+                FontSize = 11
+            };
         }
     }
 }
