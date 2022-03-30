@@ -133,9 +133,7 @@ namespace HarborUWP
             Debug.WriteLine(stopwatch.ElapsedMilliseconds);
             this.controller.ContinueSimulation();
 
-
         }
-
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)
         {
             eventLogListBox.Items.Clear();

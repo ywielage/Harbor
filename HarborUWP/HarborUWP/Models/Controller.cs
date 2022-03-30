@@ -50,7 +50,7 @@ namespace HarborUWP.Models
         {
             List<DockingStation> dockingStations = new List<DockingStation>();
             // 1/10 ratio voor DockingStation/Ship behouden
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 100; i++)
             {
                 DockingStation dockingStation = new DockingStation(i);
                 dockingStations.Add(dockingStation);
@@ -64,7 +64,7 @@ namespace HarborUWP.Models
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             //TODO: variabele voor amount of ships created, gebruiken in for loop 
-            for (int i = 1; i <= 100; i++)
+            for (int i = 1; i <= 40; i++)
             {
                 int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
@@ -78,7 +78,7 @@ namespace HarborUWP.Models
             this.timer = new System.Timers.Timer();
             //Interval in ms
             Debug.WriteLine("started Timer");
-            this.timer.Interval = 2000;
+            this.timer.Interval = 375;
             //this.timer.Elapsed += tmr_Elapsed;
             this.timer.Elapsed += this.tmr_Elapsed;
             this.timer.Start();
@@ -176,21 +176,28 @@ namespace HarborUWP.Models
                                     Debug.WriteLine("Docked ship" + selectedShip.Id + " on station " + availableDockingStation.getNumber());
                                     break;
                                 case State.Offloading:
-                                    //selectedShip.offLoad();
+                                    //this.Harbor.Warehouse.RemoveTonsOfCoal(100);
+                                    selectedShip.OffLoad(this.Harbor);
                                     break;
                                 case State.Loading:
-                                    //selectedShip.load();
+                                    selectedShip.Load(this.Harbor);
                                     break;
-                                case State.Leaving:
-                                    lock (dockingStationsList)
+                                case State.InOpenWaters:
+                                    if (shipStateBefore == State.Leaving)
                                     {
-                                        foreach (DockingStation dockingStation in dockingStationsList)
+                                        lock (dockingStationsList)
                                         {
-                                            if (dockingStation.GetShip().Id == selectedShip.Id)
+                                            foreach (DockingStation dockingStation in dockingStationsList)
                                             {
-                                                Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
-                                                dockingStation.LeaveShip();
-                                                break;
+                                                if (dockingStation.GetShip() != null)
+                                                {
+                                                    if (dockingStation.GetShip().Id == selectedShip.Id)
+                                                    {
+                                                        Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
+                                                        dockingStation.LeaveShip();
+                                                        break;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
