@@ -17,7 +17,7 @@ namespace HarborUWP.Models.Ships
             Containers = new List<Container>();
             Container.CreateContainers(amountOfContainers, id);
         }
-        public override void OffLoad(Harbor harbor, int amount, ContainerItemType itemType)
+/*        public override void OffLoad(Harbor harbor, int amount, ContainerItemType itemType)
         {
             for(int i = 0; i < amount; i++)
             {
@@ -32,6 +32,6 @@ namespace HarborUWP.Models.Ships
         public override void Load(Harbor harbor, int amount)
         {
             new Containe
-        }
+        }*/
     }
 }
