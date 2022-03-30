@@ -139,7 +139,11 @@ namespace HarborUWP.Models
 
             string shipId = dockingStation.Ship.Id.ToString();
 
-            Grid grid = new Grid();
+            Grid grid = new Grid()
+            {
+                //HorizontalAlignment = HorizontalAlignment.Center,
+                //VerticalAlignment = VerticalAlignment.Center
+            };
 
             Rectangle rectangleInner = new Rectangle
             {
@@ -152,8 +156,9 @@ namespace HarborUWP.Models
             TextBlock textBlock = new TextBlock()
             {
                 Text = shipId,
-                Margin = new Thickness(rectSize / 2.5f - shipId.Length, rectSize / 2.5f, 0, 0),
-                FontSize = (rectMargin * 2f)
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                FontSize = (rectMargin * 4f)
             };
 
             grid.Children.Add(rectangleInner);
