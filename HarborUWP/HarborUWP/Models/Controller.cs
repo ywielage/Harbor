@@ -64,7 +64,7 @@ namespace HarborUWP.Models
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             //TODO: variabele voor amount of ships created, gebruiken in for loop 
-            for (int i = 1; i <= 40; i++)
+            for (int i = 1; i <= 100; i++)
             {
                 int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
@@ -195,6 +195,8 @@ namespace HarborUWP.Models
                                                     {
                                                         Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
                                                         dockingStation.LeaveShip();
+                                                        this.Ships.Remove(selectedShip);
+                                                        this.AddNewShip();
                                                         break;
                                                     }
                                                 }
@@ -216,7 +218,7 @@ namespace HarborUWP.Models
 
                 //voeg de updateTask toe met een ship uit de loop
                 ThreadPool.QueueUserWorkItem(updateTask, ship);
-            };
+            }
 
             while (returnList.Count <= Ships.Count)
             {
@@ -237,7 +239,7 @@ namespace HarborUWP.Models
         }
 
         private List<String> UpdateShipsNonThreaded()
-        {
+        /*{
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
@@ -250,6 +252,96 @@ namespace HarborUWP.Models
             stopwatch.Stop();
             String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
             returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, without threading");
+            return returnList;
+        }*/
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            List<String> returnList = new List<String>();
+            List<DockingStation> dockingStationsList = new List<DockingStation>();
+            dockingStationsList = this.Harbor.DockingStations;
+
+
+            //loop door alle ships
+            foreach (Ship ship in Ships)
+            {
+
+                State shipStateBefore = ship.State;
+
+                DockingStation availableDockingStation = null;
+
+                foreach (DockingStation dockingStation in dockingStationsList)
+                {
+                    if (!dockingStation.IsOccupied())
+                    {
+                        availableDockingStation = dockingStation;
+                        break;
+                    }
+                }
+
+
+                if (availableDockingStation == null && ship.State.Equals(State.WaitingInPortWaters) && ship.TimeUntilDone.DurationInMins == 1)
+                {
+                    ship.TimeUntilDone.DurationInMins++;
+                }
+
+                bool shipStateChanged = false;
+
+                //update
+                String result = "\t" + ship.Update();
+
+                if (ship.State != shipStateBefore)
+                {
+                    shipStateChanged = true;
+                }
+
+                if (shipStateChanged)
+                {
+                    switch (ship.State)
+                    {
+                        case State.Docking:
+                            availableDockingStation.DockShip(ship);
+                            Debug.WriteLine("Docked ship" + ship.Id + " on station " + availableDockingStation.getNumber());
+                            break;
+                        case State.Offloading:
+                            //this.Harbor.Warehouse.RemoveTonsOfCoal(100);
+                            ship.OffLoad(this.Harbor);
+                            break;
+                        case State.Loading:
+                            ship.Load(this.Harbor);
+                            break;
+                        case State.InOpenWaters:
+                            if (shipStateBefore == State.Leaving)
+                            {
+                                lock (dockingStationsList)
+                                {
+                                    foreach (DockingStation dockingStation in dockingStationsList)
+                                    {
+                                        if (dockingStation.GetShip() != null)
+                                        {
+                                            if (dockingStation.GetShip().Id == ship.Id)
+                                            {
+                                                Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
+                                                dockingStation.LeaveShip();
+                                                this.Ships.Remove(ship);
+                                                this.AddNewShip();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                returnList.Add(result);
+            }
+            //stop de stopwatch om te meten of hij klaar is
+            stopwatch.Stop();
+            String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
+            //voeg een string over de stopwatch terug aan de returnList
+            returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, without threading");;
             return returnList;
         }
 
@@ -298,6 +390,11 @@ namespace HarborUWP.Models
             }*/
             //TODO: if warehouse bijna leeg, this.Harbor.Warehouse.add, result.Add("")
             return resultList;
+        }
+
+        private void AddNewShip()
+        {
+            //add a new randow ship and add to ships list
         }
 
         #endregion
