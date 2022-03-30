@@ -94,7 +94,7 @@
         <Button x:Name="newHarborButton" Grid.Column="2" Content="Start new harbor" FontSize="16" Margin="10,10,10,10" VerticalAlignment="Stretch" Click="newHarborButton_Click" HorizontalAlignment="Stretch"/>
         <Button x:Name="clearEventLogButton" Grid.Column="2" Content="Clear eventlog" Margin="10,10,10,10" Grid.Row="1" VerticalAlignment="Stretch" FontSize="16" Click="clearEventLogButton_Click" HorizontalAlignment="Stretch"/>
         <CheckBox x:Name="runTreadedCheckBox" Grid.Column="1" Content="Check to run the application multi-threaded" Margin="10,28,10,10" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsChecked="True"/>
-        <TextBlock x:Name="dockingStationsLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="10,121,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Available dockingstations" VerticalAlignment="Top" FontSize="18"/>
+        <TextBlock x:Name="dockingStationsLabel" Grid.Column="1" HorizontalAlignment="Left" Margin="10,121,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Dockingstations (number indicates ship ID)" VerticalAlignment="Top" FontSize="18" Width="370" SelectionChanged="dockingStationsLabel_SelectionChanged"/>
         <StackPanel x:Name="dockingStationStackPanel" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,150,10,10" Background="#FF2B2B2B" Height="700" />
 
         <Grid Grid.RowSpan="3">
