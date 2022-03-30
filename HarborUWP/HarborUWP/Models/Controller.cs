@@ -64,7 +64,7 @@ namespace HarborUWP.Models
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             //TODO: variabele voor amount of ships created, gebruiken in for loop 
-            for (int i = 1; i <= 100; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
@@ -78,7 +78,7 @@ namespace HarborUWP.Models
             this.timer = new System.Timers.Timer();
             //Interval in ms
             Debug.WriteLine("started Timer");
-            this.timer.Interval = 375;
+            this.timer.Interval = 1000;
             //this.timer.Elapsed += tmr_Elapsed;
             this.timer.Elapsed += this.tmr_Elapsed;
             this.timer.Start();
@@ -98,11 +98,12 @@ namespace HarborUWP.Models
         {
             this.timer.Elapsed -= this.tmr_Elapsed;
         }
-        #endregion 
+
         public void ContinueSimulation()
         {
             this.timer.Elapsed += this.tmr_Elapsed;
         }
+        #endregion 
         #region Update
         public List<String> UpdateShips()
         {
@@ -126,92 +127,18 @@ namespace HarborUWP.Models
             List<DockingStation> dockingStationsList = new List<DockingStation>();
             dockingStationsList = this.Harbor.DockingStations;
 
-
             //loop door alle ships
             foreach (Ship ship in Ships)
             {
                 //maak een update task die de update in de ships calt
                 WaitCallback updateTask = (aShip) =>
                 {
-                    //haal het megegeven ship op om te gebruiken
                     Ship selectedShip = aShip as Ship;
-
-                    State shipStateBefore = selectedShip.State;
-
-                    DockingStation availableDockingStation = null;
-
                     lock (dockingStationsList)
                     {
-                        foreach (DockingStation dockingStation in dockingStationsList)
-                        {
-                            if (!dockingStation.IsOccupied())
-                            {
-                                availableDockingStation = dockingStation;
-                                break;
-                            }
-                        }
-
-
-                        if (availableDockingStation == null && selectedShip.State.Equals(State.WaitingInPortWaters) && selectedShip.TimeUntilDone.DurationInMins == 1)
-                        {
-                            selectedShip.TimeUntilDone.DurationInMins++;
-                        }
-
-                        bool shipStateChanged = false;
-
-                        //update
-                        String result = "\t" + selectedShip.Update();
-
-                        if (selectedShip.State != shipStateBefore)
-                        {
-                            shipStateChanged = true;
-                        }
-
-                        if (shipStateChanged)
-                        {
-                            switch (selectedShip.State)
-                            {
-                                case State.Docking:
-                                    availableDockingStation.DockShip(selectedShip);
-                                    Debug.WriteLine("Docked ship" + selectedShip.Id + " on station " + availableDockingStation.getNumber());
-                                    break;
-                                case State.Offloading:
-                                    //this.Harbor.Warehouse.RemoveTonsOfCoal(100);
-                                    selectedShip.OffLoad(this.Harbor);
-                                    break;
-                                case State.Loading:
-                                    selectedShip.Load(this.Harbor);
-                                    break;
-                                case State.InOpenWaters:
-                                    if (shipStateBefore == State.Leaving)
-                                    {
-                                        lock (dockingStationsList)
-                                        {
-                                            foreach (DockingStation dockingStation in dockingStationsList)
-                                            {
-                                                if (dockingStation.GetShip() != null)
-                                                {
-                                                    if (dockingStation.GetShip().Id == selectedShip.Id)
-                                                    {
-                                                        Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
-                                                        dockingStation.LeaveShip();
-                                                        this.Ships.Remove(selectedShip);
-                                                        this.AddNewShip();
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    break;
-                            }
-                        }
-
-                        //lock de lijst om te zorgen dat ze niet tegelijk dingen toevoegen
                         lock (returnList)
                         {
-                            //voeg het resultaat toe aan de lijst
-                            returnList.Add(result);
+                            returnList.Add(UpdateShipTask(selectedShip, dockingStationsList));
                         }
                     }
                 };
@@ -233,27 +160,12 @@ namespace HarborUWP.Models
                     return returnList;
                 }
             }
-
+            //Als er iets fout gaat:
             returnList.Add("Something went wrong");
             return returnList;
         }
 
         private List<String> UpdateShipsNonThreaded()
-        /*{
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            List<String> returnList = new List<String>();
-
-            foreach (Ship ship in Ships)
-            {
-                returnList.Add("\t" + ship.Update());
-            }
-            stopwatch.Stop();
-            String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-            returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, without threading");
-            return returnList;
-        }*/
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -262,87 +174,111 @@ namespace HarborUWP.Models
             List<DockingStation> dockingStationsList = new List<DockingStation>();
             dockingStationsList = this.Harbor.DockingStations;
 
-
             //loop door alle ships
             foreach (Ship ship in Ships)
             {
+                returnList.Add(UpdateShipTask(ship, dockingStationsList));
+            }
+            stopwatch.Stop();
+            //voeg een string over de stopwatch terug aan de returnList
+            returnList.Add("Took " + stopwatch.Elapsed.TotalSeconds + " seconds to update " + Ships.Count + " ships, with threading");
+            return returnList;
+        }
 
-                State shipStateBefore = ship.State;
+        private String UpdateShipTask(Ship selectedShip, List<DockingStation> dockingStationsList)
+        {
+            State shipStateBefore = selectedShip.State;
 
-                DockingStation availableDockingStation = null;
+            DockingStation availableDockingStation = null;
 
+            //Haal een beschikbaar dockingStation op
+            availableDockingStation = GetAvailableDockingStation(dockingStationsList);
+            //Als er geen dockingstation beschikbaar is, verhoog de TimeUntilDone
+            this.TryIncreaseShipTimeUntilDone(selectedShip, availableDockingStation);
+            //Update de ship en sla het resultaat op
+            String result = "\t" + selectedShip.Update();
+            //Check of de shipState verandert is
+            bool shipStateChanged = CheckShipStateChange(selectedShip, shipStateBefore);
+            //Update de dockingstations als dat nodig is
+            if (shipStateChanged)
+            {
+                this.UpdateDockingStations(selectedShip, availableDockingStation, shipStateBefore, dockingStationsList);
+            }
+            return result;
+
+        }
+
+        private DockingStation GetAvailableDockingStation(List<DockingStation> dockingStationsList)
+        {
+            DockingStation availableDockingStation = null;
+            foreach (DockingStation dockingStation in dockingStationsList)
+            {
+                if (!dockingStation.IsOccupied())
+                {
+                    availableDockingStation = dockingStation;
+                    break;
+                }
+            }
+            return availableDockingStation;
+        }
+
+        private void TryIncreaseShipTimeUntilDone(Ship ship, DockingStation dockingStation)
+        {
+            if (dockingStation == null && ship.State.Equals(State.WaitingInPortWaters) && ship.TimeUntilDone.DurationInMins == 1)
+            {
+                ship.TimeUntilDone.DurationInMins++;
+            }
+        }
+
+        private bool CheckShipStateChange(Ship ship, State stateBefore)
+        {
+            bool result = false;
+            if (ship.State != stateBefore)
+            {
+                result = true;
+            }
+            return result;
+        }
+
+        private void UpdateDockingStations(Ship ship, DockingStation availableDockingStation, State shipStateBefore, List<DockingStation> dockingStationsList)
+        {
+            switch (ship.State)
+            {
+                case State.Docking:
+                    availableDockingStation.DockShip(ship);
+                    Debug.WriteLine("Docked ship" + ship.Id + " on station " + availableDockingStation.getNumber());
+                    break;
+                case State.Offloading:
+                    ship.OffLoad(this.Harbor);
+                    break;
+                case State.Loading:
+                    ship.Load(this.Harbor);
+                    break;
+                case State.InOpenWaters:
+                    this.TryLeaveShip(ship, shipStateBefore, dockingStationsList);
+                    break;
+            }
+        }
+
+        private void TryLeaveShip(Ship ship, State shipStateBefore, List<DockingStation> dockingStationsList)
+        {
+            if (shipStateBefore == State.Leaving)
+            {
                 foreach (DockingStation dockingStation in dockingStationsList)
                 {
-                    if (!dockingStation.IsOccupied())
+                    if (dockingStation.GetShip() != null)
                     {
-                        availableDockingStation = dockingStation;
-                        break;
+                        if (dockingStation.GetShip().Id == ship.Id)
+                        {
+                            Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
+                            dockingStation.LeaveShip();
+                            this.Ships.Remove(ship);
+                            this.AddNewShip();
+                            break;
+                        }
                     }
                 }
-
-
-                if (availableDockingStation == null && ship.State.Equals(State.WaitingInPortWaters) && ship.TimeUntilDone.DurationInMins == 1)
-                {
-                    ship.TimeUntilDone.DurationInMins++;
-                }
-
-                bool shipStateChanged = false;
-
-                //update
-                String result = "\t" + ship.Update();
-
-                if (ship.State != shipStateBefore)
-                {
-                    shipStateChanged = true;
-                }
-
-                if (shipStateChanged)
-                {
-                    switch (ship.State)
-                    {
-                        case State.Docking:
-                            availableDockingStation.DockShip(ship);
-                            Debug.WriteLine("Docked ship" + ship.Id + " on station " + availableDockingStation.getNumber());
-                            break;
-                        case State.Offloading:
-                            //this.Harbor.Warehouse.RemoveTonsOfCoal(100);
-                            ship.OffLoad(this.Harbor);
-                            break;
-                        case State.Loading:
-                            ship.Load(this.Harbor);
-                            break;
-                        case State.InOpenWaters:
-                            if (shipStateBefore == State.Leaving)
-                            {
-                                lock (dockingStationsList)
-                                {
-                                    foreach (DockingStation dockingStation in dockingStationsList)
-                                    {
-                                        if (dockingStation.GetShip() != null)
-                                        {
-                                            if (dockingStation.GetShip().Id == ship.Id)
-                                            {
-                                                Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
-                                                dockingStation.LeaveShip();
-                                                this.Ships.Remove(ship);
-                                                this.AddNewShip();
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                    }
-                }
-                returnList.Add(result);
             }
-            //stop de stopwatch om te meten of hij klaar is
-            stopwatch.Stop();
-            String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-            //voeg een string over de stopwatch terug aan de returnList
-            returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, without threading");;
-            return returnList;
         }
 
         public List<String> manageWarehouse()
