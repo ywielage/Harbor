@@ -17,21 +17,19 @@ namespace HarborUWP.Models.Ships
             Containers = new List<Container>();
             Container.CreateContainers(amountOfContainers, id);
         }
-/*        public override void OffLoad(Harbor harbor, int amount, ContainerItemType itemType)
+        // Offload alle containers op schip
+        public override void OffLoad(Harbor harbor)
         {
-            for(int i = 0; i < amount; i++)
-            {
-                if(Containers.Count > 0)
-                {
-                    Containers.RemoveAt(Containers.Count - 1);
-                    harbor.Warehouse.RemoveContainers()
-                }
-            }
+            this.Containers.ForEach(container =>
+            harbor.Warehouse.Containers.Add(container));
+            this.Containers.Clear();
         }
 
-        public override void Load(Harbor harbor, int amount)
+        // Random getal tussen minpercentage en maxCapacity
+        // Hoogste itemtype pakken
+        public override void Load(Harbor harbor)
         {
-            new Containe
-        }*/
+            harbor.Warehouse.RemoveContainers(new Random().Next((int)Math.Round(maxCapacity * 0.8), maxCapacity));
+        }
     }
 }

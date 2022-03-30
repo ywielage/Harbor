@@ -116,8 +116,8 @@ namespace HarborUWP.Models.Ships
             }
         }
 
-/*        public abstract void OffLoad(Harbor harbor, int amount);
+        public abstract void OffLoad(Harbor harbor);
         // TODO: String returnen
-        public abstract void Load(Harbor harbor, int amount);*/
+        public abstract void Load(Harbor harbor);
     }
 }

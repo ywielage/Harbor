@@ -18,15 +18,29 @@ namespace HarborUWP.Models.Ships
             BulkItemType = bulkItemType;
         }
 
-/*        public override void OffLoad(Harbor harbor, int amount)
+        public override void OffLoad(Harbor harbor)
         {
-            Inventory -= amount;
-            
+            switch (BulkItemType)
+            {
+                case BulkItemType.Sand:
+                    harbor.Warehouse.AddTonsOfSand(this.Inventory);
+                    break;
+                case BulkItemType.Salt:
+                    harbor.Warehouse.AddTonsOfSalt(this.Inventory);
+                    break;
+                case BulkItemType.Coal:
+                    harbor.Warehouse.AddTonsOfCoal(this.Inventory);
+                    break;
+                case BulkItemType.Wheat:
+                    harbor.Warehouse.AddTonsOfWheat(this.Inventory);
+                    break;
+            }
+            this.Inventory = 0;
         }
 
-        public override void Load(Harbor harbor, int amount)
+        public override void Load(Harbor harbor)
         {
-            Inventory -= amount;
-        }*/
+            Inventory = new Random().Next((int)Math.Round(maxCapacity * 0.8), maxCapacity);
+        }
     }
 }

@@ -15,16 +15,15 @@ namespace HarborUWP.Models.Ships
         {
             Inventory = inventory;
         }
-/*        public override void OffLoad(Harbor harbor, int amount)
+        public override void OffLoad(Harbor harbor)
         {
-            Inventory -= amount;
-            harbor.Warehouse.RemoveBarrelsOfOil(amount);
+            harbor.Warehouse.AddBarrelsOfOil(Inventory);
+            Inventory = 0;
         }
 
-        public override void Load(Harbor harbor, int amount)
+        public override void Load(Harbor harbor)
         {
-            Inventory -= amount;
-            harbor.Warehouse.AddBarrelsOfOil(amount);
-        }*/
+            Inventory = new Random().Next((int)Math.Round(maxCapacity * 0.8), maxCapacity);
+        }
     }
 }
