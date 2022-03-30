@@ -41,14 +41,14 @@ namespace HarborUWP.Models
 
         internal void Initialize(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
-            panelWidth = dockingStationStackPanel.RenderSize.Width;
+            panelWidth = dockingStationStackPanel.RenderSize.Height;
 
             //Square root the amount of dockingstations to determine the amount of rows and colums
             rowAmount = (int)Math.Ceiling(Math.Sqrt(dockingStations.Count));
 
             //Determine width, height and margin per square based on width of parent StackPanel
             rectMargin = panelWidth / rowAmount / 10;
-            rectSize = (panelWidth - (rowAmount * 2 * rectMargin)) / rowAmount;
+            rectSize = (panelWidth - (rowAmount * 2.1d * rectMargin)) / rowAmount;
         }
 
         internal void UpdateDockingStationsStackPanel(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
