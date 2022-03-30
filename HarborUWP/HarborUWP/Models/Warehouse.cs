@@ -120,10 +120,13 @@ namespace HarborUWP.Models
         {
             lock (Containers)
             {
+                /*
                 for (int i = 0; i < amount; i++)
                 {
                     Containers.Remove(Containers.Find(c => c.ContainerItemType == itemType));
-                }
+                }*/
+                var containers = (from Container in Containers where Container.ContainerItemType == itemType select Container).Take(amount);
+                Containers.RemoveAll(c => containers.Contains(c));
             }
         }
 
@@ -131,13 +134,17 @@ namespace HarborUWP.Models
         {
             lock (Containers)
             {
-                for(int i = 0; i < amount; i++)
+                /*
+                for (int i = 0; i < amount; i++)
                 {
                     if(Containers.Count > 0)
                     {
                         Containers.RemoveAt(Containers.Count - 1);
                     }
                 }
+                */
+                var containers = (from Container in Containers select Container).Take(amount);
+                Containers.RemoveAll(c => containers.Contains(c));
             }
         }
     }
