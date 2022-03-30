@@ -123,6 +123,13 @@ namespace HarborUWP
                 });
                 //Debug.WriteLine(log);
             }
+            foreach (String log in controller.manageWarehouse())
+            {
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    eventLogListBox.Items.Add(log);
+                });
+            }
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {

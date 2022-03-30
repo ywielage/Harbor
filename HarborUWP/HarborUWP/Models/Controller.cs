@@ -42,7 +42,7 @@ namespace HarborUWP.Models
 
         private void InitializeHarbor()
         {
-            Warehouse warehouse = new Warehouse();
+            Warehouse warehouse = new Warehouse(0,0,0,0,0);
             Harbor = new Harbor(warehouse, InitializeDockingStation());
         }
 
@@ -50,7 +50,7 @@ namespace HarborUWP.Models
         {
             List<DockingStation> dockingStations = new List<DockingStation>();
             // 1/10 ratio voor DockingStation/Ship behouden
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 DockingStation dockingStation = new DockingStation(i);
                 dockingStations.Add(dockingStation);
@@ -92,6 +92,10 @@ namespace HarborUWP.Models
                 Debug.WriteLine(log);
             }
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
+            foreach (String log in manageWarehouse())
+            {
+                Debug.WriteLine(log);
+            }
         }
 
         public void StopSimulation()
@@ -198,12 +202,51 @@ namespace HarborUWP.Models
             return returnList;
         }
 
-        private List<String> manageWarehouse()
+        public List<String> manageWarehouse()
         {
-            List<String> result;
-            result = new List<String>();
+            List<String> resultList = new List<String>();
+                if (Harbor.Warehouse.TonsOfCoal.Amount == 0)
+                {
+                    Harbor.Warehouse.AddTonsOfCoal(100);
+                    resultList.Add("Added Coal");
+                }
+                if (Harbor.Warehouse.TonsOfSand.Amount == 0)
+                {
+                    Harbor.Warehouse.AddTonsOfSand(100);
+                    resultList.Add("Added Sand");
+                }
+                if (Harbor.Warehouse.TonsOfWheat.Amount == 0)
+                {
+                    Harbor.Warehouse.AddTonsOfWheat(100);
+                    resultList.Add("Added Wheat");
+                }
+                if (Harbor.Warehouse.BarrelsOfOil.Amount == 0)
+                {
+                    Harbor.Warehouse.AddBarrelsOfOil(100);
+                    resultList.Add("Added Oil");
+                }
+         /*   switch (Harbor.Warehouse)
+            {
+                case var expression when Harbor.Warehouse.TonsOfCoal.Amount == 0:
+                    Harbor.Warehouse.AddTonsOfCoal(100);
+                    resultList.Add("Added Coal");
+                    Debug.WriteLine("works");
+                    break;
+                case var expression when Harbor.Warehouse.TonsOfSand.Amount == 0:
+                    Harbor.Warehouse.AddTonsOfSand(100);
+                    resultList.Add("Added Sand");
+                    break;
+                case var expression when Harbor.Warehouse.TonsOfWheat.Amount == 0:
+                    Harbor.Warehouse.AddTonsOfWheat(100);
+                    resultList.Add("Added Wheat");
+                    break;
+                case var expression when Harbor.Warehouse.BarrelsOfOil.Amount == 0:
+                    Harbor.Warehouse.AddBarrelsOfOil(100);
+                    resultList.Add("Added Oil");
+                    break;
+            }*/
             //TODO: if warehouse bijna leeg, this.Harbor.Warehouse.add, result.Add("")
-            return result;
+            return resultList;
         }
 
         #endregion
