@@ -9,8 +9,8 @@ namespace HarborUWP.Models
 {
     internal class DockingStation
     {
-        private int Number { get; set; }
-        private Ship Ship { get; set; }
+        public int Number { get; set; }
+        public Ship Ship { get; set; }
 
         public DockingStation(int number)
         {

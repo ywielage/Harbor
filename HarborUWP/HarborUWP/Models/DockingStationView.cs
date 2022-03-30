@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HarborUWP.Models.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,8 @@ namespace HarborUWP.Models
         private double rectSize;
         private SolidColorBrush redBrush;
         private SolidColorBrush greenBrush;
+        private SolidColorBrush orangeBrush;
+        private SolidColorBrush yellowBrush;
 
         public DockingStationView()
         {
@@ -35,6 +38,20 @@ namespace HarborUWP.Models
                 R = 102,
                 G = 176,
                 B = 50,
+                A = 255
+            });
+            orangeBrush = new SolidColorBrush(new Color
+            {
+                R = 252,
+                G = 115,
+                B = 7,
+                A = 255
+            });
+            yellowBrush = new SolidColorBrush(new Color
+            {
+                R = 252,
+                G = 203,
+                B = 26,
                 A = 255
             });
         }
@@ -77,39 +94,75 @@ namespace HarborUWP.Models
             //Loop until end of row or until end of dockingstations count, whichever one comes first
             for (int j = 1; j <= rowAmount && currCount <= dockingStations.Count - 1; currCount++, j++)
             {
-                GenerateStackPanelCell(dockingStations, stackPanel);
+                GenerateStackPanelCell(dockingStations[currCount], stackPanel);
             }
 
             return stackPanel;
         }
 
-        private void GenerateStackPanelCell(List<DockingStation> dockingStations, StackPanel stackPanel)
+        private void GenerateStackPanelCell(DockingStation dockingStation, StackPanel stackPanel)
         {
-            Rectangle rectangle;
+            UIElement uiElement;
             //Red square for occupied dockingstation
-            if (dockingStations[currCount].IsOccupied())
+            if(!dockingStation.IsOccupied())
             {
-                rectangle = new Rectangle
-                {
-                    Fill = redBrush,
-                    Width = rectSize,
-                    Height = rectSize,
-                    Margin = new Thickness(rectMargin)
-                };
-            }
-            //Green square for vacant dockingstation
-            else
-            {
-                rectangle = new Rectangle
+                Rectangle rectangle = new Rectangle
                 {
                     Fill = greenBrush,
                     Width = rectSize,
                     Height = rectSize,
-                    Margin = new Thickness(rectMargin)
+                    Margin = new Thickness(rectMargin),
+
                 };
+                uiElement = rectangle;
+                stackPanel.Children.Add(uiElement);
+                return;
             }
+
+            SolidColorBrush brush;
+            switch (dockingStation.Ship.State)
+            {
+                case State.Docking:
+                    brush = orangeBrush;
+                    break;
+                case State.Leaving:
+                    brush = yellowBrush;
+                    break;
+                case State.Loading:
+                    brush = redBrush;
+                    break;
+                case State.Offloading:
+                default:
+                    brush = redBrush;
+                    break;
+            }
+
+            string shipId = dockingStation.Ship.Id.ToString();
+
+            Grid grid = new Grid();
+
+            Rectangle rectangleInner = new Rectangle
+            {
+                Fill = brush,
+                Width = rectSize,
+                Height = rectSize,
+                Margin = new Thickness(rectMargin)
+            };
+
+            TextBlock textBlock = new TextBlock()
+            {
+                Text = shipId,
+                Margin = new Thickness(rectSize / 2.5f - shipId.Length, rectSize / 2.5f, 0, 0),
+                FontSize = (rectMargin * 2f)
+            };
+
+            grid.Children.Add(rectangleInner);
+            grid.Children.Add(textBlock);
+
+            uiElement = grid;
+
             //Add square to row StackPanel
-            stackPanel.Children.Add(rectangle);
+            stackPanel.Children.Add(uiElement);
         }
     }
 }

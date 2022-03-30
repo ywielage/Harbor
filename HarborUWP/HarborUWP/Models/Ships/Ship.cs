@@ -35,11 +35,6 @@ namespace HarborUWP.Models.Ships
             return maxCapacity;
         }
 
-        public void UpdateTimeUntilDone()
-        {
-            throw new NotImplementedException();
-        }
-
         private void SetNewTimeUntilDone(int minDuration, int maxDuration) 
         {
             Random random = new Random();
