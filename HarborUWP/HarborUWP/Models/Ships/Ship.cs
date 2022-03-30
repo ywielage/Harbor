@@ -20,7 +20,7 @@ namespace HarborUWP.Models.Ships
         {
             Id = id;
             State = State.InOpenWaters;
-            SetNewTimeUntilDone(1, 15);
+            SetNewTimeUntilDone(10, 100);
             this.minPercantageCapacity = minPercantageCapacity;
             this.maxCapacity = maxCapacity;
         }

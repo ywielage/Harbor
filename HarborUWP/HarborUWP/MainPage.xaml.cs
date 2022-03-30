@@ -113,39 +113,27 @@ namespace HarborUWP
             }*/
         }
 
-        public async void tmr_Elapsed(object sender, EventArgs e)
+        public async void updateUI(List<String> result)
         {
-            foreach (String log in controller.UpdateShips())
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            this.controller.StopSimulation();
+            await Dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
             {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    eventLogListBox.Items.Add(log);
-                });
-                //Debug.WriteLine(log);
-            }
-            foreach (String log in controller.manageWarehouse())
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    eventLogListBox.Items.Add(log);
-                });
-            }
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
+                stopwatch.Stop();
+                Debug.WriteLine(stopwatch.ElapsedMilliseconds);
+                stopwatch.Restart();
+                eventLogListBox.ItemsSource = result;
                 eventLogListBox.SelectedIndex = eventLogListBox.Items.Count - 1;
                 eventLogListBox.ScrollIntoView(eventLogListBox.SelectedItem);
-            });
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
                 dockingStationView.UpdateDockingStationsStackPanel(controller.Harbor.DockingStations, dockingStationStackPanel);
-            });
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
                 UpdateShipsListView(controller.Ships);
             });
+            stopwatch.Stop();
+            Debug.WriteLine(stopwatch.ElapsedMilliseconds);
+            this.controller.ContinueSimulation();
+
+
         }
 
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)

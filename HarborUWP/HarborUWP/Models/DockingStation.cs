@@ -18,6 +18,11 @@ namespace HarborUWP.Models
             Ship = null;
         }
 
+        public Ship GetShip()
+        {
+            return Ship;
+        }
+
         public bool IsOccupied()
         {
             return Ship != null;
@@ -31,6 +36,11 @@ namespace HarborUWP.Models
         public void LeaveShip()
         {
             this.Ship = null;
+        }
+
+        public int getNumber()
+        {
+            return this.Number;
         }
     }
 }
