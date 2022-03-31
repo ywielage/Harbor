@@ -9,13 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Collections.ObjectModel;
 
 namespace HarborUWP.Models
 {
     internal class Controller
     {
         public Harbor Harbor { get; set; }
-        public List<Ship> Ships { get; set; }
+        public ObservableCollection<Ship> Ships { get; set; }
         //aanpassen in de UI zodat je kan selecteren of het via threaded wordt gerunt om te bewijzen dat het threaded sneller is
         public bool runThreaded { get; set; }
 
@@ -60,7 +61,7 @@ namespace HarborUWP.Models
 
         private void InitializeShips()
         {
-            this.Ships = new List<Ship>();
+            this.Ships = new ObservableCollection<Ship>();
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             //TODO: variabele voor amount of ships created, gebruiken in for loop 
@@ -78,7 +79,7 @@ namespace HarborUWP.Models
             this.timer = new System.Timers.Timer();
             //Interval in ms
             Debug.WriteLine("started Timer");
-            this.timer.Interval = 1000;
+            this.timer.Interval = 400;
             //this.timer.Elapsed += tmr_Elapsed;
             this.timer.Elapsed += this.tmr_Elapsed;
             this.timer.Start();

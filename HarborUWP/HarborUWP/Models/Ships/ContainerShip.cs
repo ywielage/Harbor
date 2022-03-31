@@ -14,6 +14,7 @@ namespace HarborUWP.Models.Ships
 
         public ContainerShip(int id, int minPercantageCapacity, int maxCapacity, int amountOfContainers) : base(id, minPercantageCapacity, maxCapacity)
         {
+            ShipType = ShipTypes.Container;
             Containers = new List<Container>();
             Container.CreateContainers(amountOfContainers, id);
         }

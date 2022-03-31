@@ -5,14 +5,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Windows.UI.Core;
 
 namespace HarborUWP.Models.Ships
 {
-    internal abstract class Ship
+    internal abstract class Ship : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual async Task OnPropertyChangedAsync(string propertyName)
+        {
+            await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+                {
+                    PropertyChangedEventHandler handler = PropertyChanged;
+                    if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+                }
+            );
+        }
+        protected bool SetField<T>(ref T field, T value, string propertyName)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+            OnPropertyChangedAsync(propertyName);
+            return true;
+        }
+
+        private State state;
+        private TimeUntilDone timeUntilDone;
+
         public int Id { get; set; }
-        public State State { get; set; }
-        public TimeUntilDone TimeUntilDone { get; set; }
+        public ShipTypes ShipType { get; set; }
+        public State State 
+        { 
+            get 
+            { 
+                return state; 
+            } 
+            set 
+            { 
+                if(value != state)
+                {
+                    SetField(ref state, value, "State");
+                }
+            } 
+        }
+        public TimeUntilDone TimeUntilDone
+        {
+            get
+            {
+                return timeUntilDone;
+            }
+            set
+            {
+                if (value != timeUntilDone)
+                {
+                    timeUntilDone = value;
+                    SetField(ref timeUntilDone, value, "TimeUntilDone");
+                }
+            }
+        }
         protected int minPercantageCapacity = 80;
         protected int maxCapacity;
 
@@ -45,9 +98,12 @@ namespace HarborUWP.Models.Ships
 
         public string Update() 
         {
-            TimeUntilDone.Update();
+            if (TimeUntilDone.DurationInMins != 0)
+            {
+                TimeUntilDone.DurationInMins--;
+            }
 
-            if (TimeUntilDone.IsDone())
+            if (TimeUntilDone.DurationInMins <= 0)
             {
                 switch (State)
                 {

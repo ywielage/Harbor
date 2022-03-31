@@ -130,6 +130,7 @@
     <Compile Include="Models\Enums\ContainerItemType.cs" />
     <Compile Include="Models\Enums\State.cs" />
     <Compile Include="Models\Harbor.cs" />
+    <Compile Include="Models\ShipStateTable.cs" />
     <Compile Include="Models\Ships\ShipFactory\BulkCarrierCreator.cs" />
     <Compile Include="Models\Ships\BulkCarrierShip.cs" />
     <Compile Include="Models\Ships\ShipFactory\ContainerCreator.cs" />
@@ -196,6 +197,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
+      <Version>7.1.2</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

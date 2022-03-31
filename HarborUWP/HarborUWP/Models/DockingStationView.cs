@@ -14,6 +14,7 @@ namespace HarborUWP.Models
 {
     public class DockingStationView
     {
+        private List<DockingStation> currDockingStations;
         private double panelWidth;
         private int rowAmount;
         private int currCount;
@@ -58,6 +59,11 @@ namespace HarborUWP.Models
 
         internal void Initialize(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
+            currDockingStations = new List<DockingStation>();
+            foreach (DockingStation dockingStation in dockingStations)
+            {
+                currDockingStations.Add(dockingStation);
+            }
             panelWidth = dockingStationStackPanel.RenderSize.Height;
 
             //Square root the amount of dockingstations to determine the amount of rows and colums
@@ -70,6 +76,42 @@ namespace HarborUWP.Models
 
         internal void UpdateDockingStationsStackPanel(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
+            //bool isSame = true;
+            //for (int i = 0; i < dockingStations.Count; i++)
+            //{
+            //    if (dockingStations[i].Ship == null && currDockingStations[i].Ship == null)
+            //    {
+            //        continue;
+            //    }
+
+            //    if (dockingStations[i].Ship != null && currDockingStations[i].Ship == null)
+            //    {
+            //        isSame = false;
+            //        break;
+            //    }
+            //    if (dockingStations[i].Ship == null && currDockingStations[i].Ship != null)
+            //    {
+            //        isSame = false;
+            //        break;
+            //    }
+            //    if(!dockingStations[i].Ship.Equals(currDockingStations[i].Ship))
+            //    {
+            //        isSame = false;
+            //        break;
+            //    }
+            //}
+
+            //if(isSame && dockingStationStackPanel.Children.Count != 0)
+            //{
+            //    return;
+            //}
+
+            //currDockingStations.Clear();
+            //foreach (DockingStation dockingStation in dockingStations)
+            //{
+            //    currDockingStations.Add(dockingStation);
+            //}
+
             dockingStationStackPanel.Children.Clear();
             currCount = 0;
 

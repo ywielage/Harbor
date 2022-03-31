@@ -21,6 +21,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Shapes;
 using Windows.UI;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -35,6 +36,7 @@ namespace HarborUWP
         private Controller controller;
         private TimeStamp timeStamp;
         private DockingStationView dockingStationView;
+        private ShipStateTable shipStateTable;
 
         public MainPage()
         {
@@ -42,12 +44,8 @@ namespace HarborUWP
             controller = new Controller();
             controller.setMainPage(this);
             dockingStationView = new DockingStationView();
+            shipStateTable = new ShipStateTable();
             isPaused = false;
-        }
-
-        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
         }
 
         private void newHarborButton_Click(object sender, RoutedEventArgs e)
@@ -57,7 +55,7 @@ namespace HarborUWP
             eventLogListBox.Items.Clear();
             dockingStationView.Initialize(controller.Harbor.DockingStations, dockingStationStackPanel);
             timeStamp = new TimeStamp(1, 0, 23);
-            
+            shipStateTable.Initialize(containerGrid, controller.Ships);
         }
 
         private async void pauseButton_Click(object sender, RoutedEventArgs e)
@@ -127,7 +125,6 @@ namespace HarborUWP
                 eventLogListBox.SelectedIndex = eventLogListBox.Items.Count - 1;
                 eventLogListBox.ScrollIntoView(eventLogListBox.SelectedItem);
                 dockingStationView.UpdateDockingStationsStackPanel(controller.Harbor.DockingStations, dockingStationStackPanel);
-                UpdateShipsListView(controller.Ships);
             });
             stopwatch.Stop();
             Debug.WriteLine(stopwatch.ElapsedMilliseconds);
@@ -137,41 +134,6 @@ namespace HarborUWP
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)
         {
             eventLogListBox.Items.Clear();
-        }
-
-        private void UpdateShipsListView(List<Ship> ships)
-        {
-            shipsListView.Items.Clear();
-            foreach (Ship ship in ships)
-            {
-                //TODO: Solution which doesnt have to create 5 objects for every ship
-                StackPanel stackPanel = new StackPanel
-                {
-                    Orientation = Orientation.Horizontal,
-                    MaxHeight = 20,
-                    MinHeight = 20,
-                };
-
-                stackPanel.Children.Add(GenerateListViewItem(100, ship.Id.ToString()));
-                stackPanel.Children.Add(GenerateListViewItem(220, ship.GetType().ToString().Substring(23)));
-                stackPanel.Children.Add(GenerateListViewItem(240, ship.State.ToString()));
-                stackPanel.Children.Add(GenerateListViewItem(160, ship.TimeUntilDone.DurationInMins.ToString()));
-
-                shipsListView.Items.Add(stackPanel);
-            }
-        }
-
-        private ListViewItem GenerateListViewItem(int width, string content)
-        {
-            return new ListViewItem
-            {
-                MaxWidth = width,
-                MinWidth = width,
-                MaxHeight = 20,
-                MinHeight = 20,
-                Content = content,
-                FontSize = 11
-            };
         }
     }
 }

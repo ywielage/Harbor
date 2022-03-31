@@ -13,6 +13,7 @@ namespace HarborUWP.Models.Ships
 
         public OilTankerShip(int id, int minPercantageCapacity, int maxCapacity, int inventory) : base(id, minPercantageCapacity, maxCapacity)
         {
+            ShipType = ShipTypes.OilTanker;
             Inventory = inventory;
         }
         public override void OffLoad(Harbor harbor)
