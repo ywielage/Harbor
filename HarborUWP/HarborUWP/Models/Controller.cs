@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Collections.ObjectModel;
+using Windows.UI.Core;
 
 namespace HarborUWP.Models
 {
@@ -51,7 +52,7 @@ namespace HarborUWP.Models
         {
             List<DockingStation> dockingStations = new List<DockingStation>();
             // 1/10 ratio voor DockingStation/Ship behouden
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 200; i++)
             {
                 DockingStation dockingStation = new DockingStation(i);
                 dockingStations.Add(dockingStation);
@@ -65,7 +66,7 @@ namespace HarborUWP.Models
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             //TODO: variabele voor amount of ships created, gebruiken in for loop 
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= 1000; i++)
             {
                 int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
@@ -273,7 +274,11 @@ namespace HarborUWP.Models
                         {
                             Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
                             dockingStation.LeaveShip();
-                            this.Ships.Remove(ship);
+                            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                            async () =>
+                            {
+                                this.Ships.Remove(ship);
+                            });
                             this.AddNewShip();
                             break;
                         }
