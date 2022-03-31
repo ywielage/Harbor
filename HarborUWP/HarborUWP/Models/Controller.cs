@@ -23,6 +23,10 @@ namespace HarborUWP.Models
 
         private System.Timers.Timer timer;
 
+        private int lastShipId;
+        private int startAmountOfShip = 100;
+        private int startAmountOfDockingStation = 100;
+
         private MainPage mainPage;
         public Controller()
         {
@@ -52,7 +56,7 @@ namespace HarborUWP.Models
         {
             List<DockingStation> dockingStations = new List<DockingStation>();
             // 1/10 ratio voor DockingStation/Ship behouden
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < startAmountOfDockingStation; i++)
             {
                 DockingStation dockingStation = new DockingStation(i);
                 dockingStations.Add(dockingStation);
@@ -66,11 +70,12 @@ namespace HarborUWP.Models
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             //TODO: variabele voor amount of ships created, gebruiken in for loop 
-            for (int i = 1; i <= 1000; i++)
+            for (int i = 1; i <= startAmountOfShip; i++)
             {
                 int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
             }
+            lastShipId = startAmountOfShip;
         }
         #endregion
 
@@ -336,6 +341,8 @@ namespace HarborUWP.Models
         private void AddNewShip()
         {
             //add a new randow ship and add to ships list
+            lastShipId++;
+            this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), lastShipId))
         }
 
         #endregion
