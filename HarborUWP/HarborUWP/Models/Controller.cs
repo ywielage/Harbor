@@ -274,8 +274,7 @@ namespace HarborUWP.Models
                         {
                             Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
                             dockingStation.LeaveShip();
-                            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-                            async () =>
+                            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
                             {
                                 this.Ships.Remove(ship);
                             });
