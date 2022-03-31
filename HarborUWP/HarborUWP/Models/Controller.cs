@@ -282,8 +282,8 @@ namespace HarborUWP.Models
                             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
                             {
                                 this.Ships.Remove(ship);
+                                this.AddNewShip();
                             });
-                            this.AddNewShip();
                             break;
                         }
                     }
@@ -342,7 +342,7 @@ namespace HarborUWP.Models
         {
             //add a new randow ship and add to ships list
             lastShipId++;
-            this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), lastShipId))
+            this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), lastShipId));
         }
 
         #endregion
