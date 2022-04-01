@@ -65,21 +65,21 @@ namespace HarborUWP.Models.Ships
                 }
             }
         }
-        protected int minPercantageCapacity = 80;
+        protected int minPercentageCapacity = 80;
         protected int maxCapacity;
 
-        protected Ship(int id, int minPercantageCapacity, int maxCapacity)
+        protected Ship(int id, int minPercentageCapacity, int maxCapacity)
         {
             Id = id;
             State = State.InOpenWaters;
             SetNewTimeUntilDone(10, 100);
-            this.minPercantageCapacity = minPercantageCapacity;
+            this.minPercentageCapacity = minPercentageCapacity;
             this.maxCapacity = maxCapacity;
         }
 
-        public int GetMaxPercentageCapacity()
+        public int GetminPercentageCapacity()
         {
-            return minPercantageCapacity;
+            return minPercentageCapacity;
         }
 
         public int GetMaxCapacity()
@@ -94,7 +94,7 @@ namespace HarborUWP.Models.Ships
             return TimeUntilDone = new TimeUntilDone(duration);            
         }
 
-        public string Update() 
+        public void Update() 
         {
             if (TimeUntilDone.DurationInMins != 0)
             {
@@ -134,7 +134,6 @@ namespace HarborUWP.Models.Ships
                         break;
                 }
             }
-            return $"Ship {Id} is now {StatusConverter(State)}, for another {TimeUntilDone.DurationInMins} minutes";
         }
 
         public static ShipTypes GenerateRandomShipType()

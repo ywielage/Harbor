@@ -41,7 +41,22 @@ namespace HarborUWP.Models.Ships
 
         public override void Load(Harbor harbor)
         {
-            Inventory = new Random().Next((int)Math.Round(maxCapacity * 0.8), maxCapacity);
+            Inventory = new Random().Next((int)minPercentageCapacity, maxCapacity);
+            switch (BulkItemType)
+            {
+                case BulkItemType.Sand:
+                    harbor.Warehouse.RemoveTonsOfSand(Inventory);
+                    break;
+                case BulkItemType.Salt:
+                    harbor.Warehouse.RemoveTonsOfSalt(Inventory);
+                    break;
+                case BulkItemType.Coal:
+                    harbor.Warehouse.RemoveTonsOfCoal(Inventory);
+                    break;
+                case BulkItemType.Wheat:
+                    harbor.Warehouse.RemoveTonsOfWheat(Inventory);
+                    break;
+            }
         }
     }
 }

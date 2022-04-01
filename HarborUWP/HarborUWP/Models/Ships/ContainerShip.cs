@@ -30,7 +30,7 @@ namespace HarborUWP.Models.Ships
         // Hoogste itemtype pakken
         public override void Load(Harbor harbor)
         {
-            harbor.Warehouse.RemoveContainers(new Random().Next((int)Math.Round(maxCapacity * 0.8), maxCapacity));
+            harbor.Warehouse.RemoveContainers(new Random().Next((int)minPercentageCapacity, maxCapacity));
         }
     }
 }
