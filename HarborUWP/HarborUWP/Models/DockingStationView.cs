@@ -1,9 +1,6 @@
 ﻿using HarborUWP.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,6 +12,7 @@ namespace HarborUWP.Models
     public class DockingStationView
     {
         private List<DockingStation> currDockingStations;
+        private bool firstCycle;
         private double panelWidth;
         private int rowAmount;
         private int currCount;
@@ -60,9 +58,10 @@ namespace HarborUWP.Models
         internal void Initialize(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
             currDockingStations = new List<DockingStation>();
-            foreach (DockingStation dockingStation in dockingStations)
+            firstCycle = true;
+            for (int i = 0; i < dockingStations.Count; i++)
             {
-                currDockingStations.Add(dockingStation);
+                currDockingStations.Add(dockingStations[i].Clone());
             }
             panelWidth = dockingStationStackPanel.RenderSize.Height;
 
@@ -76,53 +75,82 @@ namespace HarborUWP.Models
 
         internal void UpdateDockingStationsStackPanel(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
-            //bool isSame = true;
-            //for (int i = 0; i < dockingStations.Count; i++)
-            //{
-            //    if (dockingStations[i].Ship == null && currDockingStations[i].Ship == null)
-            //    {
-            //        continue;
-            //    }
+            bool isSame = IsSameCollection(dockingStations, dockingStationStackPanel);
 
-            //    if (dockingStations[i].Ship != null && currDockingStations[i].Ship == null)
-            //    {
-            //        isSame = false;
-            //        break;
-            //    }
-            //    if (dockingStations[i].Ship == null && currDockingStations[i].Ship != null)
-            //    {
-            //        isSame = false;
-            //        break;
-            //    }
-            //    if(!dockingStations[i].Ship.Equals(currDockingStations[i].Ship))
-            //    {
-            //        isSame = false;
-            //        break;
-            //    }
-            //}
+            if (isSame)
+            {
+                return;
+            }
 
-            //if(isSame && dockingStationStackPanel.Children.Count != 0)
-            //{
-            //    return;
-            //}
-
-            //currDockingStations.Clear();
-            //foreach (DockingStation dockingStation in dockingStations)
-            //{
-            //    currDockingStations.Add(dockingStation);
-            //}
-
-            dockingStationStackPanel.Children.Clear();
             currCount = 0;
 
             //Loop until all rows are filled
             for (int i = 1; i <= rowAmount; i++)
             {
-                StackPanel stackPanel = GenerateStackPanelRow(dockingStations);
-
-                //Add row to parent StackPanel
-                dockingStationStackPanel.Children.Add(stackPanel);
+                if(firstCycle)
+                {
+                    //Add stack panel to parent stack panel
+                    StackPanel stackPanel = GenerateStackPanelRow(dockingStations);
+                    dockingStationStackPanel.Children.Add(stackPanel);
+                    continue;
+                }
+                
+                UpdateStackPanelRow(dockingStations, (StackPanel)dockingStationStackPanel.Children[i - 1]);
             }
+
+            firstCycle = false;
+
+            //Update current list for next cycle
+            currDockingStations = new List<DockingStation>();
+            for (int i = 0; i < dockingStations.Count; i++)
+            {
+                currDockingStations.Add(dockingStations[i].Clone());
+            }
+        }
+
+        private bool IsSameCollection(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
+        {
+            bool isSame = true;
+            for (int i = 0; i < dockingStations.Count; i++)
+            {
+                if(!IsSameShip(dockingStations[i], i))
+                {
+                    isSame = false;
+                    break;
+                }
+            }
+
+            if (firstCycle)
+            {
+                isSame = false;
+            }
+
+            return isSame;
+        }
+
+        private bool IsSameShip(DockingStation dockingStation, int i)
+        {
+            if (dockingStation.Ship == null && currDockingStations[i].Ship == null)
+            {
+                return true;
+            }
+
+            if (dockingStation.Ship != null && currDockingStations[i].Ship == null)
+            {
+                return false;
+            }
+
+            if (dockingStation.Ship == null && currDockingStations[i].Ship != null)
+            {
+                return false;
+            }
+
+            if (!dockingStation.Ship.Equals(currDockingStations[i].Ship))
+            {
+                return false;
+            }
+
+            return false;
         }
 
         private StackPanel GenerateStackPanelRow(List<DockingStation> dockingStations)
@@ -134,20 +162,24 @@ namespace HarborUWP.Models
             };
 
             //Loop until end of row or until end of dockingstations count, whichever one comes first
-            for (int j = 1; j <= rowAmount && currCount <= dockingStations.Count - 1; currCount++, j++)
+            for (int j = 1; j <= rowAmount && currCount <= dockingStations.Count - 1; j++)
             {
-                GenerateStackPanelCell(dockingStations[currCount], stackPanel);
+                UIElement uiElement = GenerateStackPanelCell(dockingStations[currCount]);
+                stackPanel.Children.Add(uiElement);
             }
-
+            
             return stackPanel;
+
         }
 
-        private void GenerateStackPanelCell(DockingStation dockingStation, StackPanel stackPanel)
+        private Grid GenerateStackPanelCell(DockingStation dockingStation)
         {
-            UIElement uiElement;
+            Grid grid;
             //Red square for occupied dockingstation
-            if(!dockingStation.IsOccupied())
+            if (!dockingStation.IsOccupied())
             {
+                grid = new Grid();
+
                 Rectangle rectangle = new Rectangle
                 {
                     Fill = greenBrush,
@@ -156,60 +188,102 @@ namespace HarborUWP.Models
                     Margin = new Thickness(rectMargin),
 
                 };
-                uiElement = rectangle;
-                stackPanel.Children.Add(uiElement);
-                return;
+
+                TextBlock textBlock = new TextBlock()
+                {
+                    Text = "",
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = (rectMargin * 4f),
+                };
+
+                grid.Children.Add(rectangle);
+                grid.Children.Add(textBlock);
+
+                currCount++;
+
+                return grid;
             }
 
-            SolidColorBrush brush;
-            switch (dockingStation.Ship.State)
-            {
-                case State.Docking:
-                    brush = orangeBrush;
-                    break;
-                case State.Leaving:
-                    brush = yellowBrush;
-                    break;
-                case State.Loading:
-                    brush = redBrush;
-                    break;
-                case State.Offloading:
-                default:
-                    brush = redBrush;
-                    break;
-            }
+            SolidColorBrush brush = SelectBrush(dockingStation.Ship.State);
 
             string shipId = dockingStation.Ship.Id.ToString();
 
-            Grid grid = new Grid()
-            {
-                //HorizontalAlignment = HorizontalAlignment.Center,
-                //VerticalAlignment = VerticalAlignment.Center
-            };
+            grid = new Grid();
 
-            Rectangle rectangleInner = new Rectangle
+            Rectangle rectangleFilled = new Rectangle
             {
                 Fill = brush,
                 Width = rectSize,
                 Height = rectSize,
-                Margin = new Thickness(rectMargin)
+                Margin = new Thickness(rectMargin),
             };
 
-            TextBlock textBlock = new TextBlock()
+            TextBlock textBlockFilled = new TextBlock()
             {
                 Text = shipId,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
-                FontSize = (rectMargin * 4f)
+                FontSize = (rectMargin * 4f),
             };
 
-            grid.Children.Add(rectangleInner);
-            grid.Children.Add(textBlock);
+            grid.Children.Add(rectangleFilled);
+            grid.Children.Add(textBlockFilled);
 
-            uiElement = grid;
+            currCount++;
 
-            //Add square to row StackPanel
-            stackPanel.Children.Add(uiElement);
+            return grid;
+        }
+
+        private void UpdateStackPanelRow(List<DockingStation> dockingStations, StackPanel stackPanel)
+        {
+            for (int i = 0; i < stackPanel.Children.Count; i++)
+            {
+                UpdateStackPanelCell(dockingStations, (Grid)stackPanel.Children[i]);
+            }
+        }
+
+        private void UpdateStackPanelCell(List<DockingStation> dockingStations, Grid grid)
+        {
+            if (IsSameShip(dockingStations[currCount], currCount))
+            {
+                currCount++;
+                return;
+            }
+
+            Rectangle rectangle = (Rectangle)grid.Children[0];
+            TextBlock textBlock = (TextBlock)grid.Children[1];
+            
+            if(!dockingStations[currCount].IsOccupied())
+            {
+                rectangle.Fill = greenBrush;
+                textBlock.Text = "";
+
+                currCount++;
+                return;
+            }
+
+            SolidColorBrush brush = SelectBrush(dockingStations[currCount].Ship.State);
+            rectangle.Fill = brush;
+            textBlock.Text = dockingStations[currCount].Ship.Id.ToString();
+
+            currCount++;
+        }
+
+        private SolidColorBrush SelectBrush(State shipState)
+        {
+            switch (shipState)
+            {
+                case State.Docking:
+                    return orangeBrush;
+                case State.Leaving:
+                    return yellowBrush;
+                case State.Loading:
+                    return redBrush;
+                case State.Offloading:
+                default:
+                    return redBrush;
+            }
         }
     }
 }

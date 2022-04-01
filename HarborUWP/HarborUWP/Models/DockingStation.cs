@@ -18,6 +18,11 @@ namespace HarborUWP.Models
             Ship = null;
         }
 
+        public DockingStation()
+        {
+
+        }
+
         public Ship GetShip()
         {
             return Ship;
@@ -41,6 +46,14 @@ namespace HarborUWP.Models
         public int getNumber()
         {
             return this.Number;
+        }
+
+        public DockingStation Clone()
+        {
+            DockingStation dockingStation = new DockingStation();
+            dockingStation.Number = this.Number;
+            dockingStation.Ship = this.Ship;
+            return dockingStation;
         }
     }
 }
