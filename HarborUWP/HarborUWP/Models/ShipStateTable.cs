@@ -1,14 +1,9 @@
 ﻿using HarborUWP.Models.Ships;
 using Microsoft.Toolkit.Uwp.UI.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
-using System.Collections.ObjectModel;
 
 namespace HarborUWP.Models
 {

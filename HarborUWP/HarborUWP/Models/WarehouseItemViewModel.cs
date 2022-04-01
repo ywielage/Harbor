@@ -1,13 +1,8 @@
-﻿using HarborUWP.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Core;
 
-namespace BlueDuckyHarbor.Models
+namespace HarborUWP.Models
 {
     internal class WarehouseItemViewModel
     {

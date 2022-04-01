@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarborUWP.Models.Ships.ShipFactory
 {
@@ -12,9 +8,9 @@ namespace HarborUWP.Models.Ships.ShipFactory
         {
             Random random = new Random();
             int minPercantage = 80;
-            int maxCapacity = random.Next(70000, 190000);
-            int inventory = random.Next((int)(maxCapacity * (minPercantage / 100)), maxCapacity);
-            return new OilTankerShip(id, 80, maxCapacity, inventory);
+            int maxCapacity = random.Next(1000, 2000);
+            int inventory = random.Next((int)(maxCapacity * (minPercantage / 100d)), maxCapacity);
+            return new OilTankerShip(id, minPercantage, maxCapacity, inventory);
         }
     }
 }

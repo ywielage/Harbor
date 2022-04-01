@@ -1,10 +1,4 @@
-﻿using HarborUWP.Models;
-using HarborUWP.Models.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HarborUWP.Models.Commands;
 
 namespace HarborUWP.Models
 {

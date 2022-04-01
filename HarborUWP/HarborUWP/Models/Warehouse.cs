@@ -1,14 +1,7 @@
-﻿using BlueDuckyHarbor.Models;
-using HarborUWP.Models.Enums;
-using HarborUWP.Models.Ships;
-using System;
+﻿using HarborUWP.Models.Enums;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Core;
 
 namespace HarborUWP.Models
 {
@@ -186,36 +179,29 @@ namespace HarborUWP.Models
             }
         }
 
-        public void RemoveContainersByType(ContainerItemType itemType, int amount)
-        {
-            lock (Containers)
-            {
-                var containers = (from Container in Containers where Container.ContainerItemType == itemType select Container).Take(amount);
-                Containers.RemoveAll(c => containers.Contains(c));
-
-                switch (itemType)
-                {
-                    default:
-                        AmountOfVehicleContainers.Amount -= amount;
-                        break;
-                    case ContainerItemType.Equipment:
-                        AmountOfEquipmentContainers.Amount -= amount;
-                        break;
-                    case ContainerItemType.Provisions:
-                        AmountOfProvisionsContainers.Amount -= amount;
-                        break;
-                    case ContainerItemType.Furniture:
-                        AmountOfFurnitureContainers.Amount -= amount;
-                        break;
-                }
-            }
-        }
-
         public void RemoveContainers(int amount)
         {
             lock (Containers)
             {
-                var containers = (from Container in Containers select Container).Take(amount);
+                var containers = (from Container in Containers select Container).Take(amount).ToArray();
+                foreach (Container container in containers)
+                {
+                    switch (container.ContainerItemType)
+                    {
+                        default:
+                            AmountOfVehicleContainers.Amount -= 1;
+                            break;
+                        case ContainerItemType.Equipment:
+                            AmountOfEquipmentContainers.Amount -= 1;
+                            break;
+                        case ContainerItemType.Provisions:
+                            AmountOfProvisionsContainers.Amount -= 1;
+                            break;
+                        case ContainerItemType.Furniture:
+                            AmountOfFurnitureContainers.Amount -= 1;
+                            break;
+                    }
+                }
                 Containers.RemoveAll(c => containers.Contains(c));
             }
         }

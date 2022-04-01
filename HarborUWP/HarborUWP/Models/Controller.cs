@@ -1,17 +1,13 @@
 ﻿using HarborUWP.Models.Enums;
+using HarborUWP.Models.Exceptions;
 using HarborUWP.Models.Ships;
 using HarborUWP.Models.Ships.ShipFactory;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading;
 using Windows.UI.Core;
-using HarborUWP.Models.Exceptions;
 
 namespace HarborUWP.Models
 {
@@ -37,11 +33,12 @@ namespace HarborUWP.Models
         {
             runThreaded = false;
         }
+
         #region Initialization
 
         public void setMainPage(MainPage mainPage)
         {
-            this.mainPage = mainPage;   
+            this.mainPage = mainPage;
         }
         public void Initialize(int amountOfShips, int amountOfDockingStations)
         {
@@ -57,7 +54,7 @@ namespace HarborUWP.Models
 
         private void InitializeHarbor()
         {
-            Warehouse warehouse = new Warehouse(190000, 190000, 190000, 190000, 190000, 0);
+            Warehouse warehouse = new Warehouse(200000, 20000, 20000, 20000, 20000, 2000);
             Harbor = new Harbor(warehouse, InitializeDockingStation());
         }
 
@@ -78,7 +75,6 @@ namespace HarborUWP.Models
             this.Ships = new ObservableCollection<Ship>();
             Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
-            //TODO: variabele voor amount of ships created, gebruiken in for loop 
             for (int i = 1; i <= startAmountOfShip; i++)
             {
                 int value = random.Next(3);
@@ -101,12 +97,12 @@ namespace HarborUWP.Models
         }
 
         public void tmr_Elapsed(object sender, EventArgs e)
-        {   
+        {
             //aanpassen naar normale string
             String result = (UpdateShips());
             mainPage.updateUI(result);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
-            foreach (String log in manageWarehouse())
+            foreach (String log in ManageWarehouse())
             {
                 Debug.WriteLine(log);
             }
@@ -122,6 +118,7 @@ namespace HarborUWP.Models
             this.timer.Elapsed += this.tmr_Elapsed;
         }
         #endregion 
+
         #region Update
         public String UpdateShips()
         {
@@ -178,7 +175,7 @@ namespace HarborUWP.Models
             }
 
             //return een string over de stopwatch
-            this.changeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
+            this.ChangeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
             String avgString = this.avgTimeToUpdate.ToString();
             if (avgString.Length >= 9)
             {
@@ -203,7 +200,7 @@ namespace HarborUWP.Models
             }
             stopwatch.Stop();
             //voeg een string over de stopwatch terug aan de returnList
-            this.changeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
+            this.ChangeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
             return "Took " + stopwatch.Elapsed.TotalSeconds + " seconds to update " + Ships.Count + " ships, without threading. AVG: " + this.avgTimeToUpdate;
         }
 
@@ -293,11 +290,11 @@ namespace HarborUWP.Models
                         {
                             Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
                             dockingStation.LeaveShip();
-                            _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
-                            {
-                                this.Ships.Remove(ship);
-                                this.AddNewShip();
-                            });
+                            _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                             {
+                                 this.Ships.Remove(ship);
+                                 this.AddNewShip();
+                             });
                             break;
                         }
                     }
@@ -305,7 +302,7 @@ namespace HarborUWP.Models
             }
         }
 
-        public void changeAVGUpdateTime(double timeToUpdate)
+        public void ChangeAVGUpdateTime(double timeToUpdate)
         {
             this.amountOfUpdates += 1.0;
             double totalTimeToUpdateBefore = this.avgTimeToUpdate * (amountOfUpdates - 1);
@@ -314,34 +311,34 @@ namespace HarborUWP.Models
             this.avgTimeToUpdate = avgTimeToUpdate0;
         }
 
-        public List<String> manageWarehouse()
+        public List<String> ManageWarehouse()
         {
             List<String> resultList = new List<String>();
-                if (Harbor.Warehouse.TonsOfCoal.Amount < 20000)
-                {
-                    Harbor.Warehouse.AddTonsOfCoal(this.Ships.Count * 20000);
-                    resultList.Add("Added Coal");
-                }
-                if (Harbor.Warehouse.TonsOfSand.Amount < 20000)
-                {
-                    Harbor.Warehouse.AddTonsOfSand(1000000);
-                    resultList.Add("Added Sand");
-                }
-                if (Harbor.Warehouse.TonsOfWheat.Amount < 20000)
-                {
-                    Harbor.Warehouse.AddTonsOfWheat(this.Ships.Count * 20000);
-                    resultList.Add("Added Wheat");
-                }
-                if (Harbor.Warehouse.BarrelsOfOil.Amount < 190000)
-                {
-                    Harbor.Warehouse.AddBarrelsOfOil(this.Ships.Count * 190000);
-                    resultList.Add("Added Oil");
-                }
-                if (Harbor.Warehouse.TonsOfSalt.Amount < 20000)
-                {
-                    Harbor.Warehouse.AddTonsOfSalt(this.Ships.Count * 20000);
-                    resultList.Add("Added Salt");
-                }
+            if (Harbor.Warehouse.TonsOfCoal.Amount < 20000)
+            {
+                Harbor.Warehouse.AddTonsOfCoal(this.Ships.Count * 20000);
+                resultList.Add("Added Coal");
+            }
+            if (Harbor.Warehouse.TonsOfSand.Amount < 20000)
+            {
+                Harbor.Warehouse.AddTonsOfSand(1000000);
+                resultList.Add("Added Sand");
+            }
+            if (Harbor.Warehouse.TonsOfWheat.Amount < 20000)
+            {
+                Harbor.Warehouse.AddTonsOfWheat(this.Ships.Count * 20000);
+                resultList.Add("Added Wheat");
+            }
+            if (Harbor.Warehouse.BarrelsOfOil.Amount < 190000)
+            {
+                Harbor.Warehouse.AddBarrelsOfOil(this.Ships.Count * 190000);
+                resultList.Add("Added Oil");
+            }
+            if (Harbor.Warehouse.TonsOfSalt.Amount < 20000)
+            {
+                Harbor.Warehouse.AddTonsOfSalt(this.Ships.Count * 20000);
+                resultList.Add("Added Salt");
+            }
 
             return resultList;
         }

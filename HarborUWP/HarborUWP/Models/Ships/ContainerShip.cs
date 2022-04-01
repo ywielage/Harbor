@@ -1,9 +1,6 @@
 ﻿using HarborUWP.Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HarborUWP.Models.Ships
 {
@@ -16,7 +13,7 @@ namespace HarborUWP.Models.Ships
         {
             ShipType = ShipTypes.Container;
             Containers = new List<Container>();
-            Container.CreateContainers(amountOfContainers, id);
+            Containers.AddRange(Container.CreateContainers(amountOfContainers, id));
         }
         // Offload alle containers op schip
         public override void OffLoad(Harbor harbor)

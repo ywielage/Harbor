@@ -31,7 +31,7 @@ namespace HarborUWP.Models
                 G = 39,
                 B = 18,
                 A = 255
-            }); 
+            });
             greenBrush = new SolidColorBrush(new Color
             {
                 R = 102,
@@ -87,14 +87,14 @@ namespace HarborUWP.Models
             //Loop until all rows are filled
             for (int i = 1; i <= rowAmount; i++)
             {
-                if(firstCycle)
+                if (firstCycle)
                 {
                     //Add stack panel to parent stack panel
                     StackPanel stackPanel = GenerateStackPanelRow(dockingStations);
                     dockingStationStackPanel.Children.Add(stackPanel);
                     continue;
                 }
-                
+
                 UpdateStackPanelRow(dockingStations, (StackPanel)dockingStationStackPanel.Children[i - 1]);
             }
 
@@ -113,7 +113,7 @@ namespace HarborUWP.Models
             bool isSame = true;
             for (int i = 0; i < dockingStations.Count; i++)
             {
-                if(!IsSameShip(dockingStations[i], i))
+                if (!IsSameShip(dockingStations[i], i))
                 {
                     isSame = false;
                     break;
@@ -167,7 +167,7 @@ namespace HarborUWP.Models
                 UIElement uiElement = GenerateStackPanelCell(dockingStations[currCount]);
                 stackPanel.Children.Add(uiElement);
             }
-            
+
             return stackPanel;
 
         }
@@ -253,8 +253,8 @@ namespace HarborUWP.Models
 
             Rectangle rectangle = (Rectangle)grid.Children[0];
             TextBlock textBlock = (TextBlock)grid.Children[1];
-            
-            if(!dockingStations[currCount].IsOccupied())
+
+            if (!dockingStations[currCount].IsOccupied())
             {
                 rectangle.Fill = greenBrush;
                 textBlock.Text = "";
