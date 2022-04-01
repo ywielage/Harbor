@@ -191,7 +191,12 @@ namespace HarborUWP.Models
             stopwatch.Stop();
             //voeg een string over de stopwatch terug aan de returnList
             this.ChangeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
-            return "Took " + stopwatch.Elapsed.TotalSeconds + " seconds to update " + Ships.Count + " ships, without threading. AVG: " + this.avgTimeToUpdate;
+            String avgString = this.avgTimeToUpdate.ToString();
+            if (avgString.Length >= 9)
+            {
+                avgString = this.avgTimeToUpdate.ToString().Substring(0, 9);
+            }
+            return "Took " + stopwatch.Elapsed.TotalSeconds + " seconds to update " + Ships.Count + " ships, without threading. AVG: " + avgString;
         }
 
         private void UpdateShipTask(Ship selectedShip, List<DockingStation> dockingStationsList)
