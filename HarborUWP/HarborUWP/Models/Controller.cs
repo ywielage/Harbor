@@ -24,8 +24,10 @@ namespace HarborUWP.Models
         private System.Timers.Timer timer;
 
         private int lastShipId;
-        private int startAmountOfShip = 100;
-        private int startAmountOfDockingStation = 100;
+        private int startAmountOfShip = 10000;
+        private int startAmountOfDockingStation = 1000;
+        private double amountOfUpdates = 0.0;
+        private double avgTimeToUpdate = 0.0;
 
         private MainPage mainPage;
         public Controller()
@@ -41,9 +43,11 @@ namespace HarborUWP.Models
         }
         public void Initialize()
         {
+            Debug.WriteLine("started initialization thread");
             InitializeHarbor();
             InitializeShips();
             StartSimulation();
+            Debug.WriteLine("Done initializing");
         }
 
         private void InitializeHarbor()
@@ -85,7 +89,7 @@ namespace HarborUWP.Models
             this.timer = new System.Timers.Timer();
             //Interval in ms
             Debug.WriteLine("started Timer");
-            this.timer.Interval = 400;
+            this.timer.Interval = 3000;
             //this.timer.Elapsed += tmr_Elapsed;
             this.timer.Elapsed += this.tmr_Elapsed;
             this.timer.Start();
@@ -93,7 +97,10 @@ namespace HarborUWP.Models
 
         public void tmr_Elapsed(object sender, EventArgs e)
         {   
-            mainPage.updateUI(new List<String>{ this.UpdateShips().Last() });
+            //aanpassen naar normale string
+            List<String> results = new List<String>();
+            results.Add(UpdateShips());
+            mainPage.updateUI(results);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
             foreach (String log in manageWarehouse())
             {
@@ -112,7 +119,7 @@ namespace HarborUWP.Models
         }
         #endregion 
         #region Update
-        public List<String> UpdateShips()
+        public String UpdateShips()
         {
             Debug.WriteLine("Updated");
             if (runThreaded)
@@ -125,74 +132,65 @@ namespace HarborUWP.Models
             }
         }
 
-        private List<String> UpdateShipsThreaded()
+        private String UpdateShipsThreaded()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            List<String> returnList = new List<String>();
             List<DockingStation> dockingStationsList = new List<DockingStation>();
             dockingStationsList = this.Harbor.DockingStations;
 
+            CountdownEvent countdown = new CountdownEvent(1);
             //loop door alle ships
-            foreach (Ship ship in Ships)
+            for (int i = 0; i < Ships.Count; i++)
             {
+                countdown.AddCount();
+                Ship ship = Ships[i];
                 //maak een update task die de update in de ships calt
                 WaitCallback updateTask = (aShip) =>
                 {
                     Ship selectedShip = aShip as Ship;
                     lock (dockingStationsList)
                     {
-                        lock (returnList)
-                        {
-                            returnList.Add(UpdateShipTask(selectedShip, dockingStationsList));
-                        }
+                        UpdateShipTask(selectedShip, dockingStationsList);
                     }
+                    countdown.Signal();
                 };
-
                 //voeg de updateTask toe met een ship uit de loop
                 ThreadPool.QueueUserWorkItem(updateTask, ship);
             }
-
-            while (returnList.Count <= Ships.Count)
-            {
-                //zorg ervoor dat hij alleen stopt als hij klaar is met alle ships
-                if (returnList.Count == Ships.Count)
-                {
-                    //stop de stopwatch om te meten of hij klaar is
-                    stopwatch.Stop();
-                    String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-                    //voeg een string over de stopwatch terug aan de returnList
-                    returnList.Add("Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading");
-                    return returnList;
-                }
-            }
-            //Als er iets fout gaat:
-            returnList.Add("Something went wrong");
-            return returnList;
+            countdown.Signal();
+            countdown.Wait();
+            countdown.Reset();
+            //stop de stopwatch om te meten of hij klaar is
+            stopwatch.Stop();
+            String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
+            //return een string over de stopwatch
+            this.changeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
+            return "Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading. AVG: " + this.avgTimeToUpdate;
         }
 
-        private List<String> UpdateShipsNonThreaded()
+        private String UpdateShipsNonThreaded()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            List<String> returnList = new List<String>();
             List<DockingStation> dockingStationsList = new List<DockingStation>();
             dockingStationsList = this.Harbor.DockingStations;
 
             //loop door alle ships
-            foreach (Ship ship in Ships)
+            for (int i = 0; i < Ships.Count; i++)
             {
-                returnList.Add(UpdateShipTask(ship, dockingStationsList));
+                Ship ship = Ships[i];
+                UpdateShipTask(ship, dockingStationsList);
             }
             stopwatch.Stop();
             //voeg een string over de stopwatch terug aan de returnList
-            returnList.Add("Took " + stopwatch.Elapsed.TotalSeconds + " seconds to update " + Ships.Count + " ships, with threading");
-            return returnList;
+            this.changeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
+            return "Took " + stopwatch.Elapsed.TotalSeconds + " seconds to update " + Ships.Count + " ships, without threading. AVG: " + this.avgTimeToUpdate;
         }
 
-        private String UpdateShipTask(Ship selectedShip, List<DockingStation> dockingStationsList)
+        private void UpdateShipTask(Ship selectedShip, List<DockingStation> dockingStationsList)
         {
             State shipStateBefore = selectedShip.State;
 
@@ -203,7 +201,7 @@ namespace HarborUWP.Models
             //Als er geen dockingstation beschikbaar is, verhoog de TimeUntilDone
             this.TryIncreaseShipTimeUntilDone(selectedShip, availableDockingStation);
             //Update de ship en sla het resultaat op
-            String result = "\t" + selectedShip.Update();
+            selectedShip.Update();
             //Check of de shipState verandert is
             bool shipStateChanged = CheckShipStateChange(selectedShip, shipStateBefore);
             //Update de dockingstations als dat nodig is
@@ -211,7 +209,6 @@ namespace HarborUWP.Models
             {
                 this.UpdateDockingStations(selectedShip, availableDockingStation, shipStateBefore, dockingStationsList);
             }
-            return result;
 
         }
 
@@ -279,7 +276,7 @@ namespace HarborUWP.Models
                         {
                             Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
                             dockingStation.LeaveShip();
-                            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
+                            _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,() =>
                             {
                                 this.Ships.Remove(ship);
                                 this.AddNewShip();
@@ -289,6 +286,15 @@ namespace HarborUWP.Models
                     }
                 }
             }
+        }
+
+        public void changeAVGUpdateTime(double timeToUpdate)
+        {
+            this.amountOfUpdates += 1.0;
+            double totalTimeToUpdateBefore = this.avgTimeToUpdate * (amountOfUpdates - 1);
+            double totalTimeToUpdate = totalTimeToUpdateBefore + timeToUpdate;
+            double avgTimeToUpdate0 = totalTimeToUpdate / this.amountOfUpdates;
+            this.avgTimeToUpdate = avgTimeToUpdate0;
         }
 
         public List<String> manageWarehouse()
