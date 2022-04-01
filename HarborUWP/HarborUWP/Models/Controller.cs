@@ -26,6 +26,8 @@ namespace HarborUWP.Models
         private int lastShipId;
         private int startAmountOfShip = 10000;
         private int startAmountOfDockingStation = 1000;
+        private int timerTimeInMs = 3000;
+
         private double amountOfUpdates = 0.0;
         private double avgTimeToUpdate = 0.0;
 
@@ -89,7 +91,7 @@ namespace HarborUWP.Models
             this.timer = new System.Timers.Timer();
             //Interval in ms
             Debug.WriteLine("started Timer");
-            this.timer.Interval = 3000;
+            this.timer.Interval = this.timerTimeInMs;
             //this.timer.Elapsed += tmr_Elapsed;
             this.timer.Elapsed += this.tmr_Elapsed;
             this.timer.Start();
@@ -98,9 +100,9 @@ namespace HarborUWP.Models
         public void tmr_Elapsed(object sender, EventArgs e)
         {   
             //aanpassen naar normale string
-            List<String> results = new List<String>();
-            results.Add(UpdateShips());
-            mainPage.updateUI(results);
+            List<String> result = new List<String>();
+            result.Add(UpdateShips());
+            mainPage.updateUI(result);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
             foreach (String log in manageWarehouse())
             {
