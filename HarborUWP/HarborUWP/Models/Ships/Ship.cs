@@ -94,7 +94,7 @@ namespace HarborUWP.Models.Ships
             return TimeUntilDone = new TimeUntilDone(duration);            
         }
 
-        public string Update() 
+        public void Update() 
         {
             if (TimeUntilDone.DurationInMins != 0)
             {
@@ -134,7 +134,6 @@ namespace HarborUWP.Models.Ships
                         break;
                 }
             }
-            return $"Ship {Id} is now {StatusConverter(State)}, for another {TimeUntilDone.DurationInMins} minutes";
         }
 
         public static ShipTypes GenerateRandomShipType()
