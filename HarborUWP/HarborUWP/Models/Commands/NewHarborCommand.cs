@@ -8,10 +8,10 @@ namespace HarborUWP.Models.Commands
 {
     internal class NewHarborCommand : ICommand
     {
-        public void Execute(Application application)
+        public async void Execute(Application application)
         {
             application.controller.runThreaded = (bool)application.mainPage.runTreadedCheckBox.IsChecked;
-            application.controller.Initialize();
+            await Task.Run(() => application.controller.Initialize());
             application.mainPage.eventLogListBox.Items.Clear();
             application.dockingStationView.Initialize(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel);
             application.shipStateTable.Initialize(application.mainPage.containerGrid, application.controller.Ships);

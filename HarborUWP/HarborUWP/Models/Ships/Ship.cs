@@ -65,8 +65,8 @@ namespace HarborUWP.Models.Ships
                 }
             }
         }
-        protected int minPercentageCapacity = 80;
-        protected int maxCapacity;
+        private int minPercentageCapacity = 80;
+        private int maxCapacity;
 
         protected Ship(int id, int minPercentageCapacity, int maxCapacity)
         {
@@ -77,7 +77,7 @@ namespace HarborUWP.Models.Ships
             this.maxCapacity = maxCapacity;
         }
 
-        public int GetminPercentageCapacity()
+        public int GetMinPercentageCapacity()
         {
             return minPercentageCapacity;
         }

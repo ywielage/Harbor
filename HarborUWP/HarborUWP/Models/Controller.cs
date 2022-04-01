@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Collections.ObjectModel;
 using Windows.UI.Core;
+using HarborUWP.Models.Exceptions;
 
 namespace HarborUWP.Models
 {
@@ -26,7 +27,7 @@ namespace HarborUWP.Models
         private int lastShipId;
         private int startAmountOfShip = 10000;
         private int startAmountOfDockingStation = 1000;
-        private int timerTimeInMs = 3000;
+        private int timerTimeInMs = 1500;
 
         private double amountOfUpdates = 0.0;
         private double avgTimeToUpdate = 0.0;
@@ -36,7 +37,6 @@ namespace HarborUWP.Models
         {
             runThreaded = false;
         }
-
         #region Initialization
 
         public void setMainPage(MainPage mainPage)
@@ -100,8 +100,7 @@ namespace HarborUWP.Models
         public void tmr_Elapsed(object sender, EventArgs e)
         {   
             //aanpassen naar normale string
-            List<String> result = new List<String>();
-            result.Add(UpdateShips());
+            String result = (UpdateShips());
             mainPage.updateUI(result);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
             foreach (String log in manageWarehouse())
@@ -167,6 +166,14 @@ namespace HarborUWP.Models
             //stop de stopwatch om te meten of hij klaar is
             stopwatch.Stop();
             String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
+
+            Debug.WriteLine(Convert.ToDouble(this.timerTimeInMs) / 1000);
+
+            if (stopwatch.Elapsed.TotalSeconds >= (Convert.ToDouble(this.timerTimeInMs) / 1000))
+            {
+                throw new UpdateTookLongerThanTimerException(stopwatch.Elapsed.TotalSeconds, this.timerTimeInMs);
+            }
+
             //return een string over de stopwatch
             this.changeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
             return "Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading. AVG: " + this.avgTimeToUpdate;
@@ -327,6 +334,7 @@ namespace HarborUWP.Models
                     Harbor.Warehouse.AddTonsOfSalt(this.Ships.Count * 20000);
                     resultList.Add("Added Salt");
                 }
+
             return resultList;
         }
 
@@ -336,7 +344,6 @@ namespace HarborUWP.Models
             lastShipId++;
             this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), lastShipId));
         }
-
         #endregion
     }
 }

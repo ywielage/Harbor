@@ -10,8 +10,8 @@ namespace HarborUWP.Models.Commands
 {
     internal class UpdateUICommand : ICommand
     {
-        private List<String> result;
-        public UpdateUICommand(List<String> result)
+        private String result;
+        public UpdateUICommand(String result)
         {
             this.result = result;
         }
@@ -25,9 +25,9 @@ namespace HarborUWP.Models.Commands
                 stopwatch.Stop();
                 Debug.WriteLine(stopwatch.ElapsedMilliseconds);
                 stopwatch.Restart();
-                application.mainPage.eventLogListBox.ItemsSource = result;
-                application.mainPage.eventLogListBox.SelectedIndex = application.mainPage.eventLogListBox.Items.Count - 1;
-                application.mainPage.eventLogListBox.ScrollIntoView(application.mainPage.eventLogListBox.SelectedItem);
+                //application.mainPage.eventLogListBox.ItemsSource = result;
+                //application.mainPage.eventLogListBox.SelectedIndex = application.mainPage.eventLogListBox.Items.Count - 1;
+                //application.mainPage.eventLogListBox.ScrollIntoView(application.mainPage.eventLogListBox.SelectedItem);
                 application.dockingStationView.UpdateDockingStationsStackPanel(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel);
             });
             stopwatch.Stop();

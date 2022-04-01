@@ -24,7 +24,7 @@ namespace HarborUWP.Models.Ships
 
         public override void Load(Harbor harbor)
         {
-            Inventory = new Random().Next((int)minPercentageCapacity, maxCapacity);
+            Inventory = new Random().Next((int)GetMinPercentageCapacity(), GetMaxCapacity());
             harbor.Warehouse.RemoveBarrelsOfOil(Inventory);
         }
     }

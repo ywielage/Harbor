@@ -149,6 +149,7 @@
     <Compile Include="Models\Enums\ShipTypes.cs" />
     <Compile Include="Models\StorageObject.cs" />
     <Compile Include="Models\TimeUntilDone.cs" />
+    <Compile Include="Models\Exceptions\UpdateTookLongerThanTimerException.cs" />
     <Compile Include="Models\Warehouse.cs" />
     <Compile Include="Models\WarehouseStateTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
