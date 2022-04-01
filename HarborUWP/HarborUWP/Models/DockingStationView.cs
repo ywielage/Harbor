@@ -75,7 +75,7 @@ namespace HarborUWP.Models
 
         internal void UpdateDockingStationsStackPanel(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
-            bool isSame = IsSameCollection(dockingStations, dockingStationStackPanel);
+            bool isSame = IsSameCollection(dockingStations);
 
             if (isSame)
             {
@@ -108,7 +108,7 @@ namespace HarborUWP.Models
             }
         }
 
-        private bool IsSameCollection(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
+        private bool IsSameCollection(List<DockingStation> dockingStations)
         {
             bool isSame = true;
             for (int i = 0; i < dockingStations.Count; i++)
