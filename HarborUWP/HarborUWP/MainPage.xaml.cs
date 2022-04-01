@@ -34,7 +34,6 @@ namespace HarborUWP
     {
         private bool isPaused;
         private Controller controller;
-        private TimeStamp timeStamp;
         private DockingStationView dockingStationView;
         private ShipStateTable shipStateTable;
 
@@ -54,7 +53,6 @@ namespace HarborUWP
             controller.Initialize();
             eventLogListBox.Items.Clear();
             dockingStationView.Initialize(controller.Harbor.DockingStations, dockingStationStackPanel);
-            timeStamp = new TimeStamp(1, 0, 23);
             shipStateTable.Initialize(containerGrid, controller.Ships);
         }
 
@@ -83,32 +81,6 @@ namespace HarborUWP
             
 
             controller.runThreaded = (bool)runTreadedCheckBox.IsChecked;
-
-           /* if (timeStamp.IsStartDay())
-            {
-                eventLogListBox.Items.Add(timeStamp.StartDay());
-            }
-
-            for (int i = 0; i < 60; i++)
-            {
-                List<string> stringList = controller.UpdateShips();
-                for (int j = 0; j < stringList.Count; j++)
-                {
-                    string minuteString = i.ToString();
-                    if (i < 10)
-                    {
-                        minuteString = "0" + i;
-                    }
-                    eventLogListBox.Items.Add($"Day {timeStamp.DayCount} [{timeStamp.CurrHour}:{minuteString}] {stringList[j]}");
-                }
-            }
-
-            timeStamp.UpdateHour();
-
-            if (timeStamp.IsEndOfDay())
-            {
-                eventLogListBox.Items.Add(timeStamp.EndDay());
-            }*/
         }
 
         public async void updateUI(List<String> result)
