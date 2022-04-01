@@ -48,7 +48,7 @@ namespace HarborUWP
         {
             application.executeCommand(new PauseCommand());
         }
-        public void updateUI(List<String> result)
+        public void updateUI(String result)
         {
             application.executeCommand(new UpdateUICommand(result));  
         }

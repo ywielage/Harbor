@@ -37,7 +37,6 @@ namespace HarborUWP.Models
         {
             runThreaded = false;
         }
-
         #region Initialization
 
         public void setMainPage(MainPage mainPage)
@@ -101,8 +100,7 @@ namespace HarborUWP.Models
         public void tmr_Elapsed(object sender, EventArgs e)
         {   
             //aanpassen naar normale string
-            List<String> result = new List<String>();
-            result.Add(UpdateShips());
+            String result = (UpdateShips());
             mainPage.updateUI(result);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
             foreach (String log in manageWarehouse())
@@ -345,7 +343,6 @@ namespace HarborUWP.Models
             lastShipId++;
             this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), lastShipId));
         }
-
         #endregion
     }
 }
