@@ -41,7 +41,7 @@ namespace HarborUWP.Models.Ships
 
         public override void Load(Harbor harbor)
         {
-            Inventory = new Random().Next((int)minPercentageCapacity, maxCapacity);
+            Inventory = new Random().Next((int)GetMinPercentageCapacity(), GetMaxCapacity());
             switch (BulkItemType)
             {
                 case BulkItemType.Sand:

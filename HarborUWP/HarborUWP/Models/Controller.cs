@@ -336,6 +336,7 @@ namespace HarborUWP.Models
                     Harbor.Warehouse.AddTonsOfSalt(this.Ships.Count * 20000);
                     resultList.Add("Added Salt");
                 }
+
             return resultList;
         }
 

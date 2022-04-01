@@ -21,16 +21,14 @@ namespace HarborUWP.Models.Ships
         // Offload alle containers op schip
         public override void OffLoad(Harbor harbor)
         {
-            this.Containers.ForEach(container =>
-            harbor.Warehouse.Containers.Add(container));
-            this.Containers.Clear();
+            harbor.Warehouse.AddContainers(Containers);
         }
 
         // Random getal tussen minpercentage en maxCapacity
         // Hoogste itemtype pakken
         public override void Load(Harbor harbor)
         {
-            harbor.Warehouse.RemoveContainers(new Random().Next((int)minPercentageCapacity, maxCapacity));
+            harbor.Warehouse.RemoveContainers(new Random().Next((int)GetMinPercentageCapacity(), GetMaxCapacity()));
         }
     }
 }
