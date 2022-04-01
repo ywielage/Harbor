@@ -12,7 +12,7 @@ namespace HarborUWP.Models.Commands
     {
         public void Execute(Application app)
         {
-            app.mainPage.eventLogListBox.Items.Clear();
+            app.mainPage.eventLogTextBlock.Text = "";
         }
     }
 }

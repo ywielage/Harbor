@@ -25,9 +25,7 @@ namespace HarborUWP.Models.Commands
                 stopwatch.Stop();
                 Debug.WriteLine(stopwatch.ElapsedMilliseconds);
                 stopwatch.Restart();
-                //application.mainPage.eventLogListBox.ItemsSource = result;
-                //application.mainPage.eventLogListBox.SelectedIndex = application.mainPage.eventLogListBox.Items.Count - 1;
-                //application.mainPage.eventLogListBox.ScrollIntoView(application.mainPage.eventLogListBox.SelectedItem);
+                application.mainPage.eventLogTextBlock.Text = result;
                 application.dockingStationView.UpdateDockingStationsStackPanel(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel);
             });
             stopwatch.Stop();

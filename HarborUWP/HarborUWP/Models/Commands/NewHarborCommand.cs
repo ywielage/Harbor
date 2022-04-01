@@ -12,7 +12,7 @@ namespace HarborUWP.Models.Commands
         {
             application.controller.runThreaded = (bool)application.mainPage.runTreadedCheckBox.IsChecked;
             await Task.Run(() => application.controller.Initialize());
-            application.mainPage.eventLogListBox.Items.Clear();
+            application.mainPage.eventLogTextBlock.Text = "";
             application.dockingStationView.Initialize(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel);
             application.shipStateTable.Initialize(application.mainPage.containerGrid, application.controller.Ships);
             application.warehouseStateTable.Initialize(application.mainPage.containerGrid, application.controller.Harbor.Warehouse);
