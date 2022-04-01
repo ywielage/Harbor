@@ -65,21 +65,21 @@ namespace HarborUWP.Models.Ships
                 }
             }
         }
-        protected int minPercantageCapacity = 80;
+        protected int minPercentageCapacity = 80;
         protected int maxCapacity;
 
-        protected Ship(int id, int minPercantageCapacity, int maxCapacity)
+        protected Ship(int id, int minPercentageCapacity, int maxCapacity)
         {
             Id = id;
             State = State.InOpenWaters;
             SetNewTimeUntilDone(10, 100);
-            this.minPercantageCapacity = minPercantageCapacity;
+            this.minPercentageCapacity = minPercentageCapacity;
             this.maxCapacity = maxCapacity;
         }
 
         public int GetMaxPercentageCapacity()
         {
-            return minPercantageCapacity;
+            return minPercentageCapacity;
         }
 
         public int GetMaxCapacity()

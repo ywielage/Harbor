@@ -48,7 +48,7 @@ namespace HarborUWP.Models
 
         private void InitializeHarbor()
         {
-            Warehouse warehouse = new Warehouse(0,0,0,0,0,0);
+            Warehouse warehouse = new Warehouse(1000000, 1000000, 1000000, 1000000, 1000000, 0);
             Harbor = new Harbor(warehouse, InitializeDockingStation());
         }
 
@@ -294,47 +294,31 @@ namespace HarborUWP.Models
         public List<String> manageWarehouse()
         {
             List<String> resultList = new List<String>();
-                if (Harbor.Warehouse.TonsOfCoal.Amount == 0)
+                if (Harbor.Warehouse.TonsOfCoal.Amount < 200000)
                 {
-                    Harbor.Warehouse.AddTonsOfCoal(100);
+                    Harbor.Warehouse.AddTonsOfCoal(1000000);
                     resultList.Add("Added Coal");
                 }
-                if (Harbor.Warehouse.TonsOfSand.Amount == 0)
+                if (Harbor.Warehouse.TonsOfSand.Amount < 200000)
                 {
-                    Harbor.Warehouse.AddTonsOfSand(100);
+                    Harbor.Warehouse.AddTonsOfSand(1000000);
                     resultList.Add("Added Sand");
                 }
-                if (Harbor.Warehouse.TonsOfWheat.Amount == 0)
+                if (Harbor.Warehouse.TonsOfWheat.Amount < 200000)
                 {
-                    Harbor.Warehouse.AddTonsOfWheat(100);
+                    Harbor.Warehouse.AddTonsOfWheat(1000000);
                     resultList.Add("Added Wheat");
                 }
-                if (Harbor.Warehouse.BarrelsOfOil.Amount == 0)
+                if (Harbor.Warehouse.BarrelsOfOil.Amount < 200000)
                 {
-                    Harbor.Warehouse.AddBarrelsOfOil(100);
+                    Harbor.Warehouse.AddBarrelsOfOil(1000000);
                     resultList.Add("Added Oil");
                 }
-         /*   switch (Harbor.Warehouse)
-            {
-                case var expression when Harbor.Warehouse.TonsOfCoal.Amount == 0:
-                    Harbor.Warehouse.AddTonsOfCoal(100);
-                    resultList.Add("Added Coal");
-                    Debug.WriteLine("works");
-                    break;
-                case var expression when Harbor.Warehouse.TonsOfSand.Amount == 0:
-                    Harbor.Warehouse.AddTonsOfSand(100);
-                    resultList.Add("Added Sand");
-                    break;
-                case var expression when Harbor.Warehouse.TonsOfWheat.Amount == 0:
-                    Harbor.Warehouse.AddTonsOfWheat(100);
-                    resultList.Add("Added Wheat");
-                    break;
-                case var expression when Harbor.Warehouse.BarrelsOfOil.Amount == 0:
-                    Harbor.Warehouse.AddBarrelsOfOil(100);
-                    resultList.Add("Added Oil");
-                    break;
-            }*/
-            //TODO: if warehouse bijna leeg, this.Harbor.Warehouse.add, result.Add("")
+                if (Harbor.Warehouse.TonsOfSalt.Amount < 200000)
+                {
+                    Harbor.Warehouse.AddTonsOfSalt(1000000);
+                    resultList.Add("Added Salt");
+                }
             return resultList;
         }
 
