@@ -14,13 +14,6 @@ namespace HarborUWP.Models
 {
     internal class ShipStateTable
     {
-        private DataGrid dataGrid;
-
-        public ShipStateTable()
-        {
-            dataGrid = new DataGrid();
-        }
-
         public void Initialize(Grid grid, ObservableCollection<Ship> ships)
         {
             DataGrid dataGrid = new DataGrid()

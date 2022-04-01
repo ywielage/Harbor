@@ -122,6 +122,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\WarehouseItemViewModel.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Controller.cs" />
     <Compile Include="Models\DockingStation.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="Models\StorageObject.cs" />
     <Compile Include="Models\TimeUntilDone.cs" />
     <Compile Include="Models\Warehouse.cs" />
+    <Compile Include="Models\WarehouseStateTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
