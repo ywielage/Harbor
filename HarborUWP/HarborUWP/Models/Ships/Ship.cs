@@ -77,7 +77,7 @@ namespace HarborUWP.Models.Ships
             this.maxCapacity = maxCapacity;
         }
 
-        public int GetMaxPercentageCapacity()
+        public int GetminPercentageCapacity()
         {
             return minPercentageCapacity;
         }
