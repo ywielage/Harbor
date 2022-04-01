@@ -45,11 +45,9 @@ namespace HarborUWP.Models
             startAmountOfShip = amountOfShips;
             startAmountOfDockingStation = amountOfDockingStations;
 
-            Debug.WriteLine("started initialization thread");
             InitializeHarbor();
             InitializeShips();
             StartSimulation();
-            Debug.WriteLine("Done initializing");
         }
 
         private void InitializeHarbor()
@@ -89,7 +87,6 @@ namespace HarborUWP.Models
         {
             this.timer = new System.Timers.Timer();
             //Interval in ms
-            Debug.WriteLine("started Timer");
             this.timer.Interval = this.timerTimeInMs;
             //this.timer.Elapsed += tmr_Elapsed;
             this.timer.Elapsed += this.tmr_Elapsed;
@@ -102,10 +99,6 @@ namespace HarborUWP.Models
             String result = (UpdateShips());
             mainPage.updateUI(result);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
-            foreach (String log in ManageWarehouse())
-            {
-                Debug.WriteLine(log);
-            }
         }
 
         public void StopSimulation()
@@ -122,7 +115,6 @@ namespace HarborUWP.Models
         #region Update
         public String UpdateShips()
         {
-            Debug.WriteLine("Updated");
             if (runThreaded)
             {
                 return UpdateShipsThreaded();
@@ -166,8 +158,6 @@ namespace HarborUWP.Models
             //stop de stopwatch om te meten of hij klaar is
             stopwatch.Stop();
             String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-
-            Debug.WriteLine(Convert.ToDouble(this.timerTimeInMs) / 1000);
 
             if (stopwatch.Elapsed.TotalSeconds >= (Convert.ToDouble(this.timerTimeInMs) / 1000))
             {
@@ -264,7 +254,6 @@ namespace HarborUWP.Models
             {
                 case State.Docking:
                     availableDockingStation.DockShip(ship);
-                    Debug.WriteLine("Docked ship" + ship.Id + " on station " + availableDockingStation.getNumber());
                     break;
                 case State.Offloading:
                     ship.OffLoad(this.Harbor);
@@ -288,7 +277,6 @@ namespace HarborUWP.Models
                     {
                         if (dockingStation.GetShip().Id == ship.Id)
                         {
-                            Debug.WriteLine("Docking station " + dockingStation.getNumber() + " Is now empty");
                             dockingStation.LeaveShip();
                             _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                              {
