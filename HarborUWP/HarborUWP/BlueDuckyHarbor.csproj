@@ -119,9 +119,16 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Commands\ClearEventLogCommand.cs" />
+    <Compile Include="Models\Commands\ICommand.cs" />
+    <Compile Include="Models\Commands\NewHarborCommand.cs" />
+    <Compile Include="Models\Commands\PauseCommand.cs" />
+    <Compile Include="Models\Commands\UpdateUICommand.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\Application.cs" />
+    <Compile Include="Models\WarehouseItemViewModel.cs" />
     <Compile Include="Models\Container.cs" />
     <Compile Include="Models\Controller.cs" />
     <Compile Include="Models\DockingStation.cs" />
@@ -144,6 +151,7 @@
     <Compile Include="Models\TimeUntilDone.cs" />
     <Compile Include="Models\Exceptions\UpdateTookLongerThanTimerException.cs" />
     <Compile Include="Models\Warehouse.cs" />
+    <Compile Include="Models\WarehouseStateTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

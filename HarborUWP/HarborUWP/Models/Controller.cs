@@ -55,7 +55,7 @@ namespace HarborUWP.Models
 
         private void InitializeHarbor()
         {
-            Warehouse warehouse = new Warehouse(1000000, 1000000, 1000000, 1000000, 1000000, 0);
+            Warehouse warehouse = new Warehouse(190000, 190000, 190000, 190000, 190000, 0);
             Harbor = new Harbor(warehouse, InitializeDockingStation());
         }
 
@@ -311,29 +311,29 @@ namespace HarborUWP.Models
         public List<String> manageWarehouse()
         {
             List<String> resultList = new List<String>();
-                if (Harbor.Warehouse.TonsOfCoal.Amount < 200000)
+                if (Harbor.Warehouse.TonsOfCoal.Amount < 20000)
                 {
-                    Harbor.Warehouse.AddTonsOfCoal(1000000);
+                    Harbor.Warehouse.AddTonsOfCoal(this.Ships.Count * 20000);
                     resultList.Add("Added Coal");
                 }
-                if (Harbor.Warehouse.TonsOfSand.Amount < 200000)
+                if (Harbor.Warehouse.TonsOfSand.Amount < 20000)
                 {
                     Harbor.Warehouse.AddTonsOfSand(1000000);
                     resultList.Add("Added Sand");
                 }
-                if (Harbor.Warehouse.TonsOfWheat.Amount < 200000)
+                if (Harbor.Warehouse.TonsOfWheat.Amount < 20000)
                 {
-                    Harbor.Warehouse.AddTonsOfWheat(1000000);
+                    Harbor.Warehouse.AddTonsOfWheat(this.Ships.Count * 20000);
                     resultList.Add("Added Wheat");
                 }
-                if (Harbor.Warehouse.BarrelsOfOil.Amount < 200000)
+                if (Harbor.Warehouse.BarrelsOfOil.Amount < 190000)
                 {
-                    Harbor.Warehouse.AddBarrelsOfOil(1000000);
+                    Harbor.Warehouse.AddBarrelsOfOil(this.Ships.Count * 190000);
                     resultList.Add("Added Oil");
                 }
-                if (Harbor.Warehouse.TonsOfSalt.Amount < 200000)
+                if (Harbor.Warehouse.TonsOfSalt.Amount < 20000)
                 {
-                    Harbor.Warehouse.AddTonsOfSalt(1000000);
+                    Harbor.Warehouse.AddTonsOfSalt(this.Ships.Count * 20000);
                     resultList.Add("Added Salt");
                 }
             return resultList;
