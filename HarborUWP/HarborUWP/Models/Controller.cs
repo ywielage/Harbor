@@ -179,7 +179,12 @@ namespace HarborUWP.Models
 
             //return een string over de stopwatch
             this.changeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
-            return "Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading. AVG: " + this.avgTimeToUpdate;
+            String avgString = this.avgTimeToUpdate.ToString();
+            if (avgString.Length >= 9)
+            {
+                avgString = this.avgTimeToUpdate.ToString().Substring(0, 9);
+            }
+            return "Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading. AVG: " + avgString;
         }
 
         private String UpdateShipsNonThreaded()
