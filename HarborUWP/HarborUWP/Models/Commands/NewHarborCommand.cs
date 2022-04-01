@@ -15,6 +15,7 @@ namespace HarborUWP.Models.Commands
             application.mainPage.eventLogListBox.Items.Clear();
             application.dockingStationView.Initialize(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel);
             application.shipStateTable.Initialize(application.mainPage.containerGrid, application.controller.Ships);
+            application.warehouseStateTable.Initialize(application.mainPage.containerGrid, application.controller.Harbor.Warehouse);
         }
     }
 }
