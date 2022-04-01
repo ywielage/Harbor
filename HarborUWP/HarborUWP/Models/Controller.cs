@@ -25,8 +25,8 @@ namespace HarborUWP.Models
         private System.Timers.Timer timer;
 
         private int lastShipId;
-        private int startAmountOfShip = 10000;
-        private int startAmountOfDockingStation = 1000;
+        private int startAmountOfShip;
+        private int startAmountOfDockingStation;
         private int timerTimeInMs = 1500;
 
         private double amountOfUpdates = 0.0;
@@ -43,8 +43,11 @@ namespace HarborUWP.Models
         {
             this.mainPage = mainPage;   
         }
-        public void Initialize()
+        public void Initialize(int amountOfShips, int amountOfDockingStations)
         {
+            startAmountOfShip = amountOfShips;
+            startAmountOfDockingStation = amountOfDockingStations;
+
             Debug.WriteLine("started initialization thread");
             InitializeHarbor();
             InitializeShips();
