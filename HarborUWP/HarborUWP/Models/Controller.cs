@@ -21,12 +21,9 @@ namespace HarborUWP.Models
         //aanpassen in de UI zodat je kan selecteren of het via threaded wordt gerunt om te bewijzen dat het threaded sneller is
         public bool RunThreaded { get; set; }
 
-        private System.Timers.Timer timer;
-
         private int lastShipId;
         private int startAmountOfShip;
         private int startAmountOfDockingStation;
-        private int timerTimeInMs = 1500;
 
         private double amountOfUpdates = 0.0;
         private double avgTimeToUpdate = 0.0;
@@ -100,11 +97,9 @@ namespace HarborUWP.Models
         private void InitializeShipsNonThreaded()
         {
             this.Ships = new ObservableCollection<Ship>();
-            Random random = new Random();
             // 1/10 ratio voor DockingStation/Ship behouden
             for (int i = 1; i <= startAmountOfShip; i++)
             {
-                int value = random.Next(3);
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
             }
             lastShipId = startAmountOfShip;
@@ -114,31 +109,9 @@ namespace HarborUWP.Models
         #region Simulation
         private void StartSimulation()
         {
-            this.timer = new System.Timers.Timer();
-            //Interval in ms
-            this.timer.Interval = this.timerTimeInMs;
-            //this.timer.Elapsed += tmr_Elapsed;
-            this.timer.Elapsed += this.tmr_Elapsed;
-            this.timer.Start();
+            mainPage.update();
         }
 
-        public void tmr_Elapsed(object sender, EventArgs e)
-        {
-            //aanpassen naar normale string
-            string result = (UpdateShips());
-            mainPage.updateUI(result);
-            //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
-        }
-
-        public void StopSimulation()
-        {
-            this.timer.Elapsed -= this.tmr_Elapsed;
-        }
-
-        public void ContinueSimulation()
-        {
-            this.timer.Elapsed += this.tmr_Elapsed;
-        }
         #endregion 
 
         #region Update
@@ -148,10 +121,7 @@ namespace HarborUWP.Models
             {
                 return UpdateShipsThreaded();
             }
-            else
-            {
-                return UpdateShipsNonThreaded();
-            }
+            return UpdateShipsNonThreaded();
         }
 
         private string UpdateShipsThreaded()
@@ -171,14 +141,10 @@ namespace HarborUWP.Models
             }
 
             Task.WaitAll(threadCollection);
+
             //stop de stopwatch om te meten of hij klaar is
             stopwatch.Stop();
             string timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
-
-            if (stopwatch.Elapsed.TotalSeconds >= (Convert.ToDouble(this.timerTimeInMs) / 1000))
-            {
-                throw new UpdateTookLongerThanTimerException(stopwatch.Elapsed.TotalSeconds, this.timerTimeInMs);
-            }
 
             //return een string over de stopwatch
             this.ChangeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
@@ -200,7 +166,7 @@ namespace HarborUWP.Models
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            List<DockingStation> dockingStationsList = new List<DockingStation>();
+            List<DockingStation> dockingStationsList;
             dockingStationsList = this.Harbor.DockingStations;
 
             //loop door alle ships

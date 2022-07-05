@@ -17,13 +17,11 @@ namespace HarborUWP.Models.Commands
 
             if (application.isPaused)
             {
-                application.controller.ContinueSimulation();
                 application.mainPage.pauseButton.Content = "Pause Simulation";
                 application.isPaused = false;
             }
             else
             {
-                application.controller.StopSimulation();
                 application.mainPage.pauseButton.Content = "Continue Simulation";
                 application.isPaused = true;
             }

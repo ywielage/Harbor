@@ -123,7 +123,7 @@
     <Compile Include="Models\Commands\ICommand.cs" />
     <Compile Include="Models\Commands\NewHarborCommand.cs" />
     <Compile Include="Models\Commands\PauseCommand.cs" />
-    <Compile Include="Models\Commands\UpdateUICommand.cs" />
+    <Compile Include="Models\Commands\UpdateCommand.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

@@ -27,9 +27,9 @@ namespace HarborUWP
         {
             application.executeCommand(new PauseCommand());
         }
-        public void updateUI(String result)
+        public void update()
         {
-            application.executeCommand(new UpdateUICommand(result));
+            application.executeCommand(new UpdateCommand(application));
         }
         private void clearEventLogButton_Click(object sender, RoutedEventArgs e)
         {

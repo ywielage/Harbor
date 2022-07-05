@@ -22,10 +22,10 @@ namespace HarborUWP.Models
             warehouseStateTable = new WarehouseStateTable();
             isPaused = false;
         }
+
         public void executeCommand(ICommand command)
         {
             command.Execute(this);
         }
-
     }
 }
