@@ -125,7 +125,7 @@ namespace HarborUWP.Models
         public void tmr_Elapsed(object sender, EventArgs e)
         {
             //aanpassen naar normale string
-            String result = (UpdateShips());
+            string result = (UpdateShips());
             mainPage.updateUI(result);
             //foreach for manageInventory() die als het nodig is extra aan de Warehouse toevoegt. en dit als string returnt.
         }
@@ -142,7 +142,7 @@ namespace HarborUWP.Models
         #endregion 
 
         #region Update
-        public String UpdateShips()
+        public string UpdateShips()
         {
             if (RunThreaded)
             {
@@ -154,39 +154,26 @@ namespace HarborUWP.Models
             }
         }
 
-        private String UpdateShipsThreaded()
+        private string UpdateShipsThreaded()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            List<DockingStation> dockingStationsList = new List<DockingStation>();
+            List<DockingStation> dockingStationsList;
             dockingStationsList = this.Harbor.DockingStations;
 
-            CountdownEvent countdown = new CountdownEvent(1);
-            //loop door alle ships
+            var threadCollection = new Task[Ships.Count];
+
             for (int i = 0; i < Ships.Count; i++)
             {
-                countdown.AddCount();
                 Ship ship = Ships[i];
-                //maak een update task die de update in de ships calt
-                WaitCallback updateTask = (aShip) =>
-                {
-                    Ship selectedShip = aShip as Ship;
-                    lock (dockingStationsList)
-                    {
-                        UpdateShipTask(selectedShip, dockingStationsList);
-                    }
-                    countdown.Signal();
-                };
-                //voeg de updateTask toe met een ship uit de loop
-                ThreadPool.QueueUserWorkItem(updateTask, ship);
+                threadCollection[i] = updateShipTask(ship, dockingStationsList);
             }
-            countdown.Signal();
-            countdown.Wait();
-            countdown.Reset();
+
+            Task.WaitAll(threadCollection);
             //stop de stopwatch om te meten of hij klaar is
             stopwatch.Stop();
-            String timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
+            string timeToUpdate = stopwatch.Elapsed.TotalSeconds.ToString();
 
             if (stopwatch.Elapsed.TotalSeconds >= (Convert.ToDouble(this.timerTimeInMs) / 1000))
             {
@@ -195,7 +182,7 @@ namespace HarborUWP.Models
 
             //return een string over de stopwatch
             this.ChangeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
-            String avgString = this.avgTimeToUpdate.ToString();
+            string avgString = this.avgTimeToUpdate.ToString();
             if (avgString.Length >= 9)
             {
                 avgString = this.avgTimeToUpdate.ToString().Substring(0, 9);
@@ -203,7 +190,12 @@ namespace HarborUWP.Models
             return "Took " + timeToUpdate + " seconds to update " + Ships.Count + " ships, with threading. AVG: " + avgString;
         }
 
-        private String UpdateShipsNonThreaded()
+        private Task updateShipTask(Ship ship, List<DockingStation> dockingStationsList)
+        {
+            return Task.Run(() => UpdateShipTask(ship, dockingStationsList));
+        }
+
+        private string UpdateShipsNonThreaded()
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -220,7 +212,7 @@ namespace HarborUWP.Models
             stopwatch.Stop();
             //voeg een string over de stopwatch terug aan de returnList
             this.ChangeAVGUpdateTime(stopwatch.Elapsed.TotalSeconds);
-            String avgString = this.avgTimeToUpdate.ToString();
+            string avgString = this.avgTimeToUpdate.ToString();
             if (avgString.Length >= 9)
             {
                 avgString = this.avgTimeToUpdate.ToString().Substring(0, 9);
@@ -308,39 +300,7 @@ namespace HarborUWP.Models
             double avgTimeToUpdate0 = totalTimeToUpdate / this.amountOfUpdates;
             this.avgTimeToUpdate = avgTimeToUpdate0;
         }
-
-        public List<String> ManageWarehouse()
-        {
-            List<String> resultList = new List<String>();
-            if (Harbor.Warehouse.TonsOfCoal.Amount < 20000)
-            {
-                Harbor.Warehouse.AddTonsOfCoal(this.Ships.Count * 20000);
-                resultList.Add("Added Coal");
-            }
-            if (Harbor.Warehouse.TonsOfSand.Amount < 20000)
-            {
-                Harbor.Warehouse.AddTonsOfSand(1000000);
-                resultList.Add("Added Sand");
-            }
-            if (Harbor.Warehouse.TonsOfWheat.Amount < 20000)
-            {
-                Harbor.Warehouse.AddTonsOfWheat(this.Ships.Count * 20000);
-                resultList.Add("Added Wheat");
-            }
-            if (Harbor.Warehouse.BarrelsOfOil.Amount < 190000)
-            {
-                Harbor.Warehouse.AddBarrelsOfOil(this.Ships.Count * 190000);
-                resultList.Add("Added Oil");
-            }
-            if (Harbor.Warehouse.TonsOfSalt.Amount < 20000)
-            {
-                Harbor.Warehouse.AddTonsOfSalt(this.Ships.Count * 20000);
-                resultList.Add("Added Salt");
-            }
-
-            return resultList;
-        }
-
+        
         private void AddNewShip()
         {
             //add a new randow ship and add to ships list
