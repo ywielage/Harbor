@@ -29,7 +29,7 @@ namespace HarborUWP.Models.Commands
             }
 
 
-            application.controller.runThreaded = (bool)application.mainPage.runTreadedCheckBox.IsChecked;
+            application.controller.RunThreaded = (bool)application.mainPage.runTreadedCheckBox.IsChecked;
         }
     }
 }

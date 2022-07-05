@@ -8,7 +8,7 @@ namespace HarborUWP.Models.Commands
     {
         public async void Execute(Application application)
         {
-            application.controller.runThreaded = (bool)application.mainPage.runTreadedCheckBox.IsChecked;
+            application.controller.RunThreaded = (bool)application.mainPage.runTreadedCheckBox.IsChecked;
 
             string shipAmount = application.mainPage.amountOfShipsTextBox.Text;
             string dockingStationAmount = application.mainPage.amountOfDockingStationsTextBox.Text;
