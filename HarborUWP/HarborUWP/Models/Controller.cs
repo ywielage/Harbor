@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Core;
@@ -244,33 +245,13 @@ namespace HarborUWP.Models
 
         private DockingStation GetAvailableDockingStation(List<DockingStation> dockingStationsList)
         {
-            DockingStation availableDockingStation = null;
-            foreach (DockingStation dockingStation in dockingStationsList)
-            {
-                if (!dockingStation.IsOccupied())
-                {
-                    availableDockingStation = dockingStation;
-                    break;
-                }
-            }
+            DockingStation availableDockingStation = dockingStationsList.FirstOrDefault(d => !d.IsOccupied());
             return availableDockingStation;
-        }
-
-        private void TryIncreaseShipTimeUntilDone(Ship ship, DockingStation dockingStation)
-        {
-            if (dockingStation == null && ship.State.Equals(State.WaitingInPortWaters) && ship.TimeUntilDone.DurationInMins == 1)
-            {
-                ship.TimeUntilDone.DurationInMins++;
-            }
         }
 
         private bool CheckShipStateChange(Ship ship, State stateBefore)
         {
-            bool result = false;
-            if (ship.State != stateBefore)
-            {
-                result = true;
-            }
+            bool result = ship.State != stateBefore;
             return result;
         }
 
@@ -309,22 +290,13 @@ namespace HarborUWP.Models
         {
             if (shipStateBefore == State.Leaving)
             {
-                foreach (DockingStation dockingStation in dockingStationsList)
+                dockingStationsList.FirstOrDefault(d => d.GetShip()?.Id == ship.Id)?.LeaveShip();
+
+                _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    if (dockingStation.GetShip() != null)
-                    {
-                        if (dockingStation.GetShip().Id == ship.Id)
-                        {
-                            dockingStation.LeaveShip();
-                            _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                             {
-                                 this.Ships.Remove(ship);
-                                 this.AddNewShip();
-                             });
-                            break;
-                        }
-                    }
-                }
+                    this.Ships.Remove(ship);
+                    this.AddNewShip();
+                });
             }
         }
 
