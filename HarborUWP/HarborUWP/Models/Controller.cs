@@ -3,10 +3,12 @@ using HarborUWP.Models.Exceptions;
 using HarborUWP.Models.Ships;
 using HarborUWP.Models.Ships.ShipFactory;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.UI.Core;
 
 namespace HarborUWP.Models
@@ -16,7 +18,7 @@ namespace HarborUWP.Models
         public Harbor Harbor { get; set; }
         public ObservableCollection<Ship> Ships { get; set; }
         //aanpassen in de UI zodat je kan selecteren of het via threaded wordt gerunt om te bewijzen dat het threaded sneller is
-        public bool runThreaded { get; set; }
+        public bool RunThreaded { get; set; }
 
         private System.Timers.Timer timer;
 
@@ -31,7 +33,7 @@ namespace HarborUWP.Models
         private MainPage mainPage;
         public Controller()
         {
-            runThreaded = false;
+            RunThreaded = false;
         }
 
         #region Initialization
@@ -69,6 +71,32 @@ namespace HarborUWP.Models
         }
 
         private void InitializeShips()
+        {
+            if (RunThreaded)
+            {
+                InitializeShipsThreaded();
+            }
+            else
+            {
+                InitializeShipsNonThreaded();
+            }
+        }
+
+        private void InitializeShipsThreaded()
+        {
+            var ships = new ConcurrentBag<Ship>();
+
+            Parallel.For(0, startAmountOfShip, i =>
+            {
+                ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
+            });
+
+            this.Ships = new ObservableCollection<Ship>(ships);
+
+            lastShipId = startAmountOfShip;
+        }
+
+        private void InitializeShipsNonThreaded()
         {
             this.Ships = new ObservableCollection<Ship>();
             Random random = new Random();
@@ -115,7 +143,7 @@ namespace HarborUWP.Models
         #region Update
         public String UpdateShips()
         {
-            if (runThreaded)
+            if (RunThreaded)
             {
                 return UpdateShipsThreaded();
             }
