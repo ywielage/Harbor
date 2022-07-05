@@ -28,14 +28,31 @@ namespace HarborUWP.Models
             return Ship != null;
         }
 
-        public void DockShip(Ship ship)
+        readonly object _lock = new object();
+
+        public bool DockShipIfAvailable(Ship ship)
         {
-            this.Ship = ship;
+            lock (_lock)
+            {
+                if (!IsOccupied())
+                {
+                    this.Ship = ship;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void LeaveShip()
         {
-            this.Ship = null;
+            lock (_lock)
+            {
+                if (this.Ship != null)
+                {
+                    this.Ship = null;
+                }
+            }
         }
 
         public int getNumber()

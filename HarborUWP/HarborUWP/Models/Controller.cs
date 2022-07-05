@@ -231,12 +231,6 @@ namespace HarborUWP.Models
         {
             State shipStateBefore = selectedShip.State;
 
-            DockingStation availableDockingStation = null;
-
-            //Haal een beschikbaar dockingStation op
-            availableDockingStation = GetAvailableDockingStation(dockingStationsList);
-            //Als er geen dockingstation beschikbaar is, verhoog de TimeUntilDone
-            this.TryIncreaseShipTimeUntilDone(selectedShip, availableDockingStation);
             //Update de ship en sla het resultaat op
             selectedShip.Update();
             //Check of de shipState verandert is
@@ -244,9 +238,8 @@ namespace HarborUWP.Models
             //Update de dockingstations als dat nodig is
             if (shipStateChanged)
             {
-                this.UpdateDockingStations(selectedShip, availableDockingStation, shipStateBefore, dockingStationsList);
+                this.UpdateDockingStations(selectedShip, shipStateBefore, dockingStationsList);
             }
-
         }
 
         private DockingStation GetAvailableDockingStation(List<DockingStation> dockingStationsList)
@@ -281,12 +274,24 @@ namespace HarborUWP.Models
             return result;
         }
 
-        private void UpdateDockingStations(Ship ship, DockingStation availableDockingStation, State shipStateBefore, List<DockingStation> dockingStationsList)
+        private void UpdateDockingStations(Ship ship, State shipStateBefore, List<DockingStation> dockingStationsList)
         {
             switch (ship.State)
             {
                 case State.Docking:
-                    availableDockingStation.DockShip(ship);
+                    var availableDockingStation = GetAvailableDockingStation(dockingStationsList);
+
+                    var docked = false;
+                    if (availableDockingStation != null)
+                    {
+                        docked = availableDockingStation.DockShipIfAvailable(ship);
+                    }
+                    //if the ship could not dock,  set its state back to waiting
+                    if (!docked)
+                    {
+                        ship.State = State.WaitingInPortWaters;
+                        ship.TimeUntilDone.DurationInMins = 1;
+                    }
                     break;
                 case State.Offloading:
                     ship.OffLoad(this.Harbor);
