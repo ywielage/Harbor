@@ -95,10 +95,10 @@
         <Button x:Name="pauseButton" x:FieldModifier="public" Content="Pause Simulation" Margin="10,10,10,50" FontSize="24" Click="pauseButton_Click" HorizontalAlignment="Stretch" Grid.RowSpan="2" VerticalAlignment="Stretch" Grid.Column="1"/>
         <Button x:Name="newHarborButton" x:FieldModifier="public" Grid.Column="2" Content="Start new harbor" FontSize="16" Margin="10,10,10,10" VerticalAlignment="Stretch" Click="newHarborButton_Click" HorizontalAlignment="Stretch"/>
         <CheckBox x:Name="runTreadedCheckBox" x:FieldModifier="public" Grid.Column="1" Content="Check to run the application multi-threaded" Margin="10,28,10,10" Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" IsChecked="True"/>
-        <Border Background="#FF2B2B2B" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Margin="10,0,10,508" Height="52">
-            <TextBlock x:Name="eventLogTextBlock" x:FieldModifier="public" Margin="10,10,10,0"  FontSize="18" Height="32" VerticalAlignment="Top" Text="Update time"/>
+        <Border Background="#FF2B2B2B" Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="1" Margin="10,0,10,468" Height="92">
+            <TextBlock x:Name="eventLogTextBlock" x:FieldModifier="public" Margin="10,10,10,0"  FontSize="18" Height="72" VerticalAlignment="Top" Text="Update time"/>
         </Border>
-        <TextBlock x:Name="dockingStationsLabel" x:FieldModifier="public" Grid.Column="1" HorizontalAlignment="Left" Margin="10,121,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Dockingstations (number indicates ship ID)" VerticalAlignment="Top" FontSize="18" Width="370" Height="24"/>
+        <TextBlock x:Name="dockingStationsLabel" x:FieldModifier="public" Grid.Column="1" HorizontalAlignment="Left" Margin="10,111,0,0" Grid.Row="2" TextWrapping="Wrap" Text="Dockingstations (number indicates ship ID)" VerticalAlignment="Top" FontSize="18" Width="370" Height="24"/>
         <StackPanel x:Name="dockingStationStackPanel" x:FieldModifier="public" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,150,10,10" Background="#FF2B2B2B" Grid.RowSpan="2" />
         <TextBlock x:Name="warehouseTextBlock" x:FieldModifier="public" Margin="10,10,0,0" Grid.Row="3" TextWrapping="Wrap" Text="Warehouse" VerticalAlignment="Top" FontSize="24" HorizontalAlignment="Left" Width="119"/>
         <TextBlock x:Name="amountOfShipsTextBlock" x:FieldModifier="public" Grid.Column="2" HorizontalAlignment="Left" Margin="10,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Amount of ships:" VerticalAlignment="Top"/>

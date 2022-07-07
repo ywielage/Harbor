@@ -1,11 +1,16 @@
 ﻿using HarborUWP.Models.Enums;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
+using HarborUWP.Models.Ships;
+using HarborUWP.Models.Ships.ShipFactory;
 
 namespace HarborUWP.Models
 {
@@ -55,7 +60,36 @@ namespace HarborUWP.Models
             });
         }
 
-        internal void Initialize(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
+        internal void Initialize(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel, bool runThreaded)
+        {
+            if (runThreaded)
+            {
+                InitializeThreaded(dockingStations, dockingStationStackPanel);
+            }
+            else
+            {
+                InitializeNonThreaded(dockingStations, dockingStationStackPanel);
+            }
+        }
+
+        internal void InitializeThreaded(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
+        {
+            var newDockingStations = new ConcurrentBag<DockingStation>();
+            firstCycle = true;
+
+            currDockingStations = dockingStations.AsParallel().Select(ds => ds.Clone()).ToList();
+
+            panelWidth = dockingStationStackPanel.RenderSize.Height;
+
+            //Square root the amount of dockingstations to determine the amount of rows and colums
+            rowAmount = (int)Math.Ceiling(Math.Sqrt(dockingStations.Count));
+
+            //Determine width, height and margin per square based on width of parent StackPanel
+            rectMargin = panelWidth / rowAmount / 10;
+            rectSize = (panelWidth - (rowAmount * 2.1d * rectMargin)) / rowAmount;
+        }
+
+        internal void InitializeNonThreaded(List<DockingStation> dockingStations, StackPanel dockingStationStackPanel)
         {
             currDockingStations = new List<DockingStation>();
             firstCycle = true;
@@ -110,15 +144,8 @@ namespace HarborUWP.Models
 
         private bool IsSameCollection(List<DockingStation> dockingStations)
         {
-            bool isSame = true;
-            for (int i = 0; i < dockingStations.Count; i++)
-            {
-                if (!IsSameShip(dockingStations[i], i))
-                {
-                    isSame = false;
-                    break;
-                }
-            }
+            bool isSame = dockingStations.Select(ds => ds.Ship)
+                .SequenceEqual(currDockingStations.Select(ds => ds.Ship));
 
             if (firstCycle)
             {
@@ -130,27 +157,7 @@ namespace HarborUWP.Models
 
         private bool IsSameShip(DockingStation dockingStation, int i)
         {
-            if (dockingStation.Ship == null && currDockingStations[i].Ship == null)
-            {
-                return true;
-            }
-
-            if (dockingStation.Ship != null && currDockingStations[i].Ship == null)
-            {
-                return false;
-            }
-
-            if (dockingStation.Ship == null && currDockingStations[i].Ship != null)
-            {
-                return false;
-            }
-
-            if (!dockingStation.Ship.Equals(currDockingStations[i].Ship))
-            {
-                return false;
-            }
-
-            return false;
+            return dockingStation?.Ship == currDockingStations[i]?.Ship;
         }
 
         private StackPanel GenerateStackPanelRow(List<DockingStation> dockingStations)

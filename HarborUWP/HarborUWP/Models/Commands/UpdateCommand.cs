@@ -7,24 +7,24 @@ namespace HarborUWP.Models.Commands
 {
     internal class UpdateCommand : ICommand
     {
-        private Application application;
         private const int StandardTime = 1300;
-        private const int MinTime = 500;
+        private const int MinTime = 100;
 
-        public UpdateCommand(Application app)
+        public UpdateCommand()
         {
-            this.application = app;
         }
 
         public async void Execute(Application application)
         {
             Stopwatch timer = new Stopwatch();
+            //wait so you can see the time needed to initialize everything
+            await Task.Delay(2000);
             while (true)
             {
-                if (!this.application.isPaused)
+                if (!application.isPaused)
                 {
                     timer.Start();
-                    var result = this.application.controller.UpdateShips();
+                    var result = application.controller.UpdateShips();
                     timer.Stop();
                     var time = (StandardTime - timer.ElapsedMilliseconds >= MinTime) ? StandardTime - timer.ElapsedMilliseconds : MinTime;
                     await Task.Delay((int)(time));

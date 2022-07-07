@@ -2,7 +2,6 @@
 
 namespace HarborUWP.Models
 {
-
     internal class Application
     {
         public MainPage mainPage { get; set; }

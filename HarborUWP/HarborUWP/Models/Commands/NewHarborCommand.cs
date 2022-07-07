@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 
 namespace HarborUWP.Models.Commands
@@ -29,11 +30,12 @@ namespace HarborUWP.Models.Commands
                 return;
             }
 
-            await Task.Run(() => application.controller.Initialize(realShipAmount, realDockingStationAmount));
+            var result = await Task.Run(() => application.controller.Initialize(realShipAmount, realDockingStationAmount));
+
             application.mainPage.newHarborButton.IsEnabled = false;
             application.mainPage.newHarborButton.Content = "Harbor started";
-            application.mainPage.eventLogTextBlock.Text = "";
-            application.dockingStationView.Initialize(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel);
+            application.mainPage.eventLogTextBlock.Text = result;
+            application.dockingStationView.Initialize(application.controller.Harbor.DockingStations, application.mainPage.dockingStationStackPanel, application.controller.RunThreaded);
             application.shipStateTable.Initialize(application.mainPage.containerGrid, application.controller.Ships);
             application.warehouseStateTable.Initialize(application.mainPage.containerGrid, application.controller.Harbor.Warehouse);
         }

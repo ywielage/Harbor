@@ -40,23 +40,31 @@ namespace HarborUWP.Models
         {
             this.mainPage = mainPage;
         }
-        public void Initialize(int amountOfShips, int amountOfDockingStations)
+        public string Initialize(int amountOfShips, int amountOfDockingStations)
         {
             startAmountOfShip = amountOfShips;
             startAmountOfDockingStation = amountOfDockingStations;
-
-            InitializeHarbor();
-            InitializeShips();
+            var text = "";
+            text+= InitializeHarbor() + "\n";
+            text+= InitializeShips();
             StartSimulation();
+
+            return text;
         }
 
-        private void InitializeHarbor()
+        private string InitializeHarbor()
         {
             Warehouse warehouse = new Warehouse(200000, 20000, 20000, 20000, 20000, 2000);
-            Harbor = new Harbor(warehouse, InitializeDockingStation());
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var list = InitializeDockingStation();
+            stopwatch.Stop();
+            string timeToCreate = stopwatch.Elapsed.TotalSeconds.ToString();
+            Harbor = new Harbor(warehouse, list);
+            return "Took " + timeToCreate + " seconds to create " + startAmountOfDockingStation + " docking stations.";
         }
 
-        private List<DockingStation> InitializeDockingStation()
+        private List<DockingStation> InitializeDockingStationNonThreaded()
         {
             List<DockingStation> dockingStations = new List<DockingStation>();
             // 1/10 ratio voor DockingStation/Ship behouden
@@ -68,41 +76,57 @@ namespace HarborUWP.Models
             return dockingStations;
         }
 
-        private void InitializeShips()
+        private List<DockingStation> InitializeDockingStationThreaded()
+        {
+            return Enumerable.Range(0,startAmountOfDockingStation).AsParallel().Select(i => new DockingStation(i)).ToList();
+        }
+
+        private List<DockingStation> InitializeDockingStation()
         {
             if (RunThreaded)
             {
-                InitializeShipsThreaded();
+                return InitializeDockingStationThreaded();
             }
-            else
-            {
-                InitializeShipsNonThreaded();
-            }
+            return InitializeDockingStationNonThreaded();
         }
 
-        private void InitializeShipsThreaded()
+        private string InitializeShips()
         {
-            var ships = new ConcurrentBag<Ship>();
-
-            Parallel.For(0, startAmountOfShip, i =>
+            if (RunThreaded)
             {
-                ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
-            });
+                return InitializeShipsThreaded();
+            }
+            return InitializeShipsNonThreaded();
+        }
 
-            this.Ships = new ObservableCollection<Ship>(ships);
+        private string InitializeShipsThreaded()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            this.Ships = new ObservableCollection<Ship>(Enumerable.Range(0, startAmountOfShip).AsParallel().Select(i => ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i)).ToList());
+            stopwatch.Stop();
+            string timeToCreate = stopwatch.Elapsed.TotalSeconds.ToString();
 
             lastShipId = startAmountOfShip;
+
+            return "Took " + timeToCreate + " seconds to create " + startAmountOfShip + " Ships, with threading.";
         }
 
-        private void InitializeShipsNonThreaded()
+        private string InitializeShipsNonThreaded()
         {
             this.Ships = new ObservableCollection<Ship>();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             // 1/10 ratio voor DockingStation/Ship behouden
             for (int i = 1; i <= startAmountOfShip; i++)
             {
                 this.Ships.Add(ShipCreator.CreateShip(Ship.GenerateRandomShipType(), i));
             }
+            stopwatch.Stop();
+            string timeToCreate = stopwatch.Elapsed.TotalSeconds.ToString();
             lastShipId = startAmountOfShip;
+
+            return "Took " + timeToCreate + " seconds to create " + startAmountOfShip + " Ships, without threading.";
         }
         #endregion
 
